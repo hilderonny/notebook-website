@@ -1,37 +1,31 @@
-Welcome to Glitch
-=================
+https://developers.google.com/web/fundamentals/instant-and-offline/web-storage/offline-for-pwa
 
-Click `Show` in the header to see your app live. Updates to your code will instantly deploy and update live.
+- Speichergrenzen beachten
+- IndexedDB anstelle von LocalStorage
 
-**Glitch** is the friendly community where you'll build the app of your dreams. Glitch lets you instantly create, remix, edit, and host an app, bot or site, and you can invite collaborators or helpers to simultaneously edit code with you.
+Probleme mit ApplicationCache:
 
-Find out more [about Glitch](https://glitch.com/about).
+https://alistapart.com/article/application-cache-is-a-douchebag
 
+Guter Start für Web fundamentals:
 
-Your Project
-------------
+https://developers.google.com/web/fundamentals/
+http://www.selfhtml5.org/2014-html5-features/web-app-offline-speicher-der-offline-application-cache/
 
-### ← README.md
+Progressive Web App ist ein guter Ansatz
 
-That's this file, where you can tell people what your cool website does and how you built it.
+https://de.wikipedia.org/wiki/Progressive_Web_App
 
-### ← index.html
+Polymer als Client Library verwendbar:
 
-Where you'll write the content of your website. 
+https://en.wikipedia.org/wiki/Polymer_(library)
+https://www.google.de/search?q=polymer+javascript&oq=polymer+javascript&aqs=chrome..69i57.6633j0j7&sourceid=chrome&ie=UTF-8
 
-### ← style.css
+Angular mit dem Mobile Toolkit soll auf einfache Weise Service Worker bereit stellen
 
-CSS files add styling rules to your content.
+https://developers.google.com/web/fundamentals/integration/webapks
+https://developers.google.com/web/fundamentals/web-app-manifest/
 
-### ← script.js
+Vermutlich der beste Einstieg:
 
-If you're feeling fancy you can add interactivity to your site with JavaScript.
-
-### ← assets
-
-Drag in `assets`, like images or music, to add them to your project
-
-Made by [Glitch](https://glitch.com/)
--------------------
-
-\ ゜o゜)ノ
+https://developers.google.com/web/fundamentals/codelabs/your-first-pwapp/
