@@ -12,8 +12,13 @@ var cacheDefinitions = {
     version: 1,
     files: [
       '/',
-      '/app.js'
+      '/app.js',
+      '/index.html',
+      '/style.css'
+      ]
+  }
 };
+/*
 var cacheName = 'pwa-template-15';
 var filesToCache = [
   '/',
@@ -23,17 +28,27 @@ var filesToCache = [
   '/material.js',
   '/style.css'
 ];
+*/
 
-// Install service worker
+// Install service worker, is run at startup when
+// the service worker file changed
 self.addEventListener('install', function(evt) {
-  console.log('Install ' + cacheName);
+  evt.waitUntil((async function() {
+    var libraryCache = await caches.open('libraries' + cacheDefinitions.libraries.version);
+    await libraryCache.addAll(cacheDefinitions.libraries.files);
+    var appCache = await caches.open('app' + cacheDefinitions.app.version);
+    await appCache.addAll(cacheDefinitions.app.files);
+  })());
+  /*
   evt.waitUntil(caches.open(cacheName).then(function(cache) {
     console.log('Caching app shell');
     return cache.addAll(filesToCache);
   }));
+  */
 });
 
-// Update cache
+// Remove old cache files when the version of the cache changed and so
+// the cach
 self.addEventListener('activate', function(evt) {
   console.log('Activate ' + cacheName);
     evt.waitUntil(
