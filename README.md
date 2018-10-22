@@ -10,34 +10,15 @@ To force the clients to update the application files to new ones from the server
 
 ## Further readings
 
-https://developers.google.com/web/fundamentals/instant-and-offline/web-storage/offline-for-pwa
-
-- Speichergrenzen beachten
-- IndexedDB anstelle von LocalStorage
-
-Probleme mit ApplicationCache:
-
-https://alistapart.com/article/application-cache-is-a-douchebag
-
-Guter Start für Web fundamentals:
-
-https://developers.google.com/web/fundamentals/
-http://www.selfhtml5.org/2014-html5-features/web-app-offline-speicher-der-offline-application-cache/
-
-Progressive Web App ist ein guter Ansatz
-
-https://de.wikipedia.org/wiki/Progressive_Web_App
-
-Polymer als Client Library verwendbar:
-
-https://en.wikipedia.org/wiki/Polymer_(library)
-https://www.google.de/search?q=polymer+javascript&oq=polymer+javascript&aqs=chrome..69i57.6633j0j7&sourceid=chrome&ie=UTF-8
-
-Angular mit dem Mobile Toolkit soll auf einfache Weise Service Worker bereit stellen
-
-https://developers.google.com/web/fundamentals/integration/webapks
-https://developers.google.com/web/fundamentals/web-app-manifest/
-
-Vermutlich der beste Einstieg:
-
-https://developers.google.com/web/fundamentals/codelabs/your-first-pwapp/
+- [Offline Storage for Progressive Web Apps](https://developers.google.com/web/fundamentals/instant-and-offline/web-storage/offline-for-pwa)
+- [Application Cache is a Douchebag](https://alistapart.com/article/application-cache-is-a-douchebag)
+- [Web Fundamentals](https://developers.google.com/web/fundamentals/)
+- [Web-App offline speichern: der Offline Application Cache](http://www.selfhtml5.org/2014-html5-features/web-app-offline-speicher-der-offline-application-cache/)
+- [Progressive Web App](https://de.wikipedia.org/wiki/Progressive_Web_App)
+- [Polymer (library)](https://en.wikipedia.org/wiki/Polymer_(library))
+- [Polymer project](https://www.polymer-project.org/)
+- [Material Web Components](https://github.com/material-components/material-components-web-components)
+- [PWA Starter Kit](https://polymer.github.io/pwa-starter-kit/)
+- [WebAPKs on Android](https://developers.google.com/web/fundamentals/integration/webapks)
+- [The Web App Manifest](https://developers.google.com/web/fundamentals/web-app-manifest/)
+- [Your First Progressive Web App](https://developers.google.com/web/fundamentals/codelabs/your-first-pwapp/)
