@@ -19,6 +19,7 @@ To force the clients to update the application files to new ones from the server
 - [Polymer project](https://www.polymer-project.org/)
 - [Material Web Components](https://github.com/material-components/material-components-web-components)
 - [PWA Starter Kit](https://polymer.github.io/pwa-starter-kit/)
+- [LIT Element](https://github.com/Polymer/lit-element/blob/master/README.md), [Demo on Glitch](https://glitch.com/edit/#!/hello-lit-element?path=index.html:1:0)
 - [WebAPKs on Android](https://developers.google.com/web/fundamentals/integration/webapks)
 - [The Web App Manifest](https://developers.google.com/web/fundamentals/web-app-manifest/)
 - [Your First Progressive Web App](https://developers.google.com/web/fundamentals/codelabs/your-first-pwapp/)
