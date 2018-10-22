@@ -14,9 +14,9 @@
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
     <link rel="manifest" href="/manifest.json">
     <title>Hello PWA</title>
-    <link rel="stylesheet" type="text/css" href="material.css">
+    <link rel="preload" href="material.css" as="style" onload="this.rel='stylesheet'">
+    <link rel="preload" href="style.css" as="style" onload="this.rel='stylesheet'">
     <script src="material.js" async></script>
-    <link rel="stylesheet" type="text/css" href="style.css">
     <script src="app.js" async></script>
   </head>
   <body>
