@@ -1,3 +1,19 @@
+// Distinguish cache in libraries which are huge but do not
+// change often, and application files which are relatively
+// small but change often.
+// The version of the definitions will be used to determine whether
+// the cache should be updated (name changed) or not
+var cacheDefinitions = {
+  libraries: {
+    version: 1,
+    files: [ '/material.css', '/material.js' ]
+  },
+  app: {
+    version: 1,
+    files: [
+      '/',
+      '/app.js'
+};
 var cacheName = 'pwa-template-15';
 var filesToCache = [
   '/',
