@@ -9,7 +9,7 @@ var cacheDefinitions = {
     files: [ '/material.css', '/material.js' ]
   },
   app: {
-    version: 16,
+    version: 21,
     files: [
       '/',
       '/app.js',
@@ -26,14 +26,24 @@ self.addEventListener('install', function(evt) {
   evt.waitUntil((async function() {
     var libraryKey = 'libraries'  + cacheDefinitions.libraries.version;
     var appKey = 'app'  + cacheDefinitions.app.version;
+    self.refreshNeeded = false;
     var cacheKeys = await caches.keys();
-    console.log(cacheKeys);
-    console.log('Changes to service worker detected! Preparing library ' + libraryKey + ' and app ' + appKey);
-    var libraryCache = await caches.open(libraryKey);
-    await libraryCache.addAll(cacheDefinitions.libraries.files);
-    var appCache = await caches.open(appKey);
-    await appCache.addAll(cacheDefinitions.app.files);
-    self.skipWaiting(); // Force to run activate without waiting for old service worker to finish
+    if (cacheKeys.indexOf(libraryKey) < 0) {
+      console.log('Libraries need to be updated.');
+      var libraryCache = await caches.open(libraryKey);
+      await libraryCache.addAll(cacheDefinitions.libraries.files);
+      self.refreshNeeded = true;
+    }
+    if (cacheKeys.indexOf(appKey) < 0) {
+      console.log('App files need to be updated.');
+      var appCache = await caches.open(appKey);
+      await appCache.addAll(cacheDefinitions.app.files);
+      self.refreshNeeded = true;
+    }
+    if (self.refreshNeeded) {
+      console.log('Forcing refresh of content');
+      self.skipWaiting(); // Force to run activate without waiting for old service worker to finish
+    }
   })());
 });
 
