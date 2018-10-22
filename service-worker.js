@@ -9,7 +9,7 @@ var cacheDefinitions = {
     files: [ '/material.css', '/material.js' ]
   },
   app: {
-    version:37,
+    version:39,
     files: [
       '/',
       '/app.js',
