@@ -5,11 +5,11 @@
 // the cache should be updated (name changed) or not
 var cacheDefinitions = {
   libraries: {
-    version: 2,
+    version: 3,
     files: [ '/material.css', '/material.js' ]
   },
   app: {
-    version: 6,
+    version: 13,
     files: [
       '/',
       '/app.js',
@@ -18,38 +18,25 @@ var cacheDefinitions = {
       ]
   }
 };
-/*
-var cacheName = 'pwa-template-15';
-var filesToCache = [
-  '/',
-  '/app.js',
-  '/index.html',
-  '/material.css',
-  '/material.js',
-  '/style.css'
-];
-*/
 
 // Install service worker, is run at startup when
 // the service worker file changed
 self.addEventListener('install', function(evt) {
   evt.waitUntil((async function() {
-    var libraryCache = await caches.open('libraries' + cacheDefinitions.libraries.version);
+    var libraryVersion = cacheDefinitions.libraries.version;
+    var appVersion = cacheDefinitions.app.version;
+    console.log('Changes to service worker detected! Preparing library ' + libraryVersion + ' and app ' + appVersion);
+    var libraryCache = await caches.open('libraries' + libraryVersion);
     await libraryCache.addAll(cacheDefinitions.libraries.files);
-    var appCache = await caches.open('app' + cacheDefinitions.app.version);
+    var appCache = await caches.open('app' + appVersion);
     await appCache.addAll(cacheDefinitions.app.files);
   })());
-  /*
-  evt.waitUntil(caches.open(cacheName).then(function(cache) {
-    console.log('Caching app shell');
-    return cache.addAll(filesToCache);
-  }));
-  */
 });
 
 // Remove old cache files when the version of the cache changed and so
 // the cache needs to be updated
 self.addEventListener('activate', function(evt) {
+  console.log('activate');
   evt.waitUntil(
     caches.keys().then(function(cacheKeys) {
       return Promise.all(cacheKeys.map(function(key) {
