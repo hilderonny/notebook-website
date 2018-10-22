@@ -1,4 +1,4 @@
-var cacheName = 'pwa-template-12';
+var cacheName = 'pwa-template-14';
 var filesToCache = [
   '/',
   '/index.html',
@@ -20,6 +20,7 @@ self.addEventListener('activate', function(evt) {
   console.log('Activate ' + cacheName);
     evt.waitUntil(
     caches.keys().then(function(keyList) {
+      console.log(keyList);
       return Promise.all(keyList.map(function(key) {
         if (key !== cacheName) {
           console.log('[ServiceWorker] Removing old cache', key);
