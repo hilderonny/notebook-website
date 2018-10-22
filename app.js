@@ -1,4 +1,4 @@
-const version = 8;
+const version = 11;
 console.log("Hello PWA - Version " + version);
 document.getElementById("version").innerHTML = version;
 

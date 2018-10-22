@@ -1,7 +1,12 @@
-var cacheName = 'pwa-template-9';
-var filesToCache = [];
+var cacheName = 'pwa-template-12';
+var filesToCache = [
+  '/',
+  '/index.html',
+  '/app.js',
+  '/style.css'
+];
 
-// Installation
+// Install service worker
 self.addEventListener('install', function(evt) {
   console.log('Install ' + cacheName);
   evt.waitUntil(caches.open(cacheName).then(function(cache) {
@@ -10,7 +15,7 @@ self.addEventListener('install', function(evt) {
   }));
 });
 
-// Activation
+// Update cache
 self.addEventListener('activate', function(evt) {
   console.log('Activate ' + cacheName);
     evt.waitUntil(
@@ -24,4 +29,14 @@ self.addEventListener('activate', function(evt) {
     })
   );
   return self.clients.claim();
+});
+
+// Fetch from cache or network
+self.addEventListener('fetch', function(evt) {
+  console.log('Fetch ' + evt.request.url);
+  evt.respondWith(
+    caches.match(evt.request).then(function(response) {
+      return response || fetch(evt.request);
+    })
+  );
 });
