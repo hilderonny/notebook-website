@@ -1,8 +1,10 @@
-var cacheName = 'pwa-template-14';
+var cacheName = 'pwa-template-15';
 var filesToCache = [
   '/',
-  '/index.html',
   '/app.js',
+  '/index.html',
+  '/material.css',
+  '/material.js',
   '/style.css'
 ];
 
