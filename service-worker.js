@@ -5,11 +5,11 @@
 // the cache should be updated (name changed) or not
 var cacheDefinitions = {
   libraries: {
-    version: 3,
+    version: 4,
     files: [ '/material.css', '/material.js' ]
   },
   app: {
-    version: 13,
+    version: 16,
     files: [
       '/',
       '/app.js',
@@ -19,24 +19,27 @@ var cacheDefinitions = {
   }
 };
 
+
 // Install service worker, is run at startup when
 // the service worker file changed
 self.addEventListener('install', function(evt) {
   evt.waitUntil((async function() {
-    var libraryVersion = cacheDefinitions.libraries.version;
-    var appVersion = cacheDefinitions.app.version;
-    console.log('Changes to service worker detected! Preparing library ' + libraryVersion + ' and app ' + appVersion);
-    var libraryCache = await caches.open('libraries' + libraryVersion);
+    var libraryKey = 'libraries'  + cacheDefinitions.libraries.version;
+    var appKey = 'app'  + cacheDefinitions.app.version;
+    var cacheKeys = await caches.keys();
+    console.log(cacheKeys);
+    console.log('Changes to service worker detected! Preparing library ' + libraryKey + ' and app ' + appKey);
+    var libraryCache = await caches.open(libraryKey);
     await libraryCache.addAll(cacheDefinitions.libraries.files);
-    var appCache = await caches.open('app' + appVersion);
+    var appCache = await caches.open(appKey);
     await appCache.addAll(cacheDefinitions.app.files);
+    self.skipWaiting(); // Force to run activate without waiting for old service worker to finish
   })());
 });
 
 // Remove old cache files when the version of the cache changed and so
 // the cache needs to be updated
 self.addEventListener('activate', function(evt) {
-  console.log('activate');
   evt.waitUntil(
     caches.keys().then(function(cacheKeys) {
       return Promise.all(cacheKeys.map(function(key) {
