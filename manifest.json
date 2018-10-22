@@ -3,12 +3,12 @@
   "name": "PWA Template",
   "icons": [
     {
-      "src": "/icon-192.png",
+      "src": "https://cdn.glitch.com/cb41b966-e11c-4f74-ba16-5b0d7bd50b67%2Ficon-192.png",
       "type": "image/png",
       "sizes": "192x192"
     },
     {
-      "src": "/icon-512.png",
+      "src": "https://cdn.glitch.com/cb41b966-e11c-4f74-ba16-5b0d7bd50b67%2Ficon-512.png",
       "type": "image/png",
       "sizes": "512x512"
     }

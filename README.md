@@ -1,3 +1,15 @@
+# PWA Template
+
+This is a working template for a progressive web app which can run offline and which can
+be installed on the home screen on mobile devices and as shortcut on desktops.
+
+## Updates
+
+To force the clients to update the application files to new ones from the server, update the
+```version``` properties at the top of the service-worker.js file.
+
+## Further readings
+
 https://developers.google.com/web/fundamentals/instant-and-offline/web-storage/offline-for-pwa
 
 - Speichergrenzen beachten
