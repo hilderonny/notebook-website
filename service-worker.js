@@ -5,11 +5,11 @@
 // the cache should be updated (name changed) or not
 var cacheDefinitions = {
   libraries: {
-    version: 4,
+    version: 5,
     files: [ '/material.css', '/material.js' ]
   },
   app: {
-    version: 21,
+    version:31,
     files: [
       '/',
       '/app.js',
@@ -26,23 +26,25 @@ self.addEventListener('install', function(evt) {
   evt.waitUntil((async function() {
     var libraryKey = 'libraries'  + cacheDefinitions.libraries.version;
     var appKey = 'app'  + cacheDefinitions.app.version;
-    self.refreshNeeded = false;
+    var refreshNeeded = false;
     var cacheKeys = await caches.keys();
     if (cacheKeys.indexOf(libraryKey) < 0) {
       console.log('Libraries need to be updated.');
       var libraryCache = await caches.open(libraryKey);
       await libraryCache.addAll(cacheDefinitions.libraries.files);
-      self.refreshNeeded = true;
+      refreshNeeded = true;
     }
     if (cacheKeys.indexOf(appKey) < 0) {
       console.log('App files need to be updated.');
       var appCache = await caches.open(appKey);
       await appCache.addAll(cacheDefinitions.app.files);
-      self.refreshNeeded = true;
+      refreshNeeded = true;
     }
-    if (self.refreshNeeded) {
+    if (refreshNeeded) {
       console.log('Forcing refresh of content');
       self.skipWaiting(); // Force to run activate without waiting for old service worker to finish
+    } else {
+      console.log('Service worker source changed but not the cache versions. Ignoring ...');
     }
   })());
 });
