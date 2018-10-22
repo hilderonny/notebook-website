@@ -5,11 +5,11 @@
 // the cache should be updated (name changed) or not
 var cacheDefinitions = {
   libraries: {
-    version: 1,
+    version: 2,
     files: [ '/material.css', '/material.js' ]
   },
   app: {
-    version: 1,
+    version: 6,
     files: [
       '/',
       '/app.js',
@@ -48,15 +48,12 @@ self.addEventListener('install', function(evt) {
 });
 
 // Remove old cache files when the version of the cache changed and so
-// the cach
+// the cache needs to be updated
 self.addEventListener('activate', function(evt) {
-  console.log('Activate ' + cacheName);
-    evt.waitUntil(
-    caches.keys().then(function(keyList) {
-      console.log(keyList);
-      return Promise.all(keyList.map(function(key) {
-        if (key !== cacheName) {
-          console.log('[ServiceWorker] Removing old cache', key);
+  evt.waitUntil(
+    caches.keys().then(function(cacheKeys) {
+      return Promise.all(cacheKeys.map(function(key) {
+        if (key !== 'libraries' + cacheDefinitions.libraries.version && key !== 'app' + cacheDefinitions.app.version) {
           return caches.delete(key);
         }
       }));
@@ -65,9 +62,10 @@ self.addEventListener('activate', function(evt) {
   return self.clients.claim();
 });
 
-// Fetch from cache or network
+// When a resource need to be fetched, check whether it is
+// contained in the cache and return the cached version, otherwise
+// get it from the network.
 self.addEventListener('fetch', function(evt) {
-  console.log('Fetch ' + evt.request.url);
   evt.respondWith(
     caches.match(evt.request).then(function(response) {
       return response || fetch(evt.request);
