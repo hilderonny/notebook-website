@@ -28,6 +28,18 @@ window.addEventListener('load', function () {
         if (sub === null) {
           // Update UI to ask user to register for Push
           console.log('Not subscribed to push service!');
+          reg.pushManager.subscribe({
+            userVisibleOnly: true,
+            applicationServerKey: new Uint8Array("AAAAHkFd-oI:APA91bGFcb3QSqvYVlkhk_ljW6ZCEqes251k9OtNkGqpoN1T1RVPVF11YmGKDHvcUpbwhqEa4SEXppwdpPQ8PNt1RGr_wKYze0_-1hBeHNY1zhH1V-ztxoFqKC6wIxjiOSKPz9cKcpcF")
+          }).then(function(sub) {
+            console.log('Subscription: ', sub);
+          }).catch(function(e) {
+            if (Notification.permission === 'denied') {
+              console.warn('Permission for notifications was denied');
+            } else {
+              console.error('Unable to subscribe to push', e);
+            }
+          });
         } else {
           // We have a subscription, update the database
           console.log('Subscription object: ', sub);
@@ -39,3 +51,18 @@ window.addEventListener('load', function () {
   }
 
 });
+
+function urlBase64ToUint8Array(base64String) {
+  var padding = '='.repeat((4 - base64String.length % 4) % 4);
+  var base64 = (base64String + padding)
+    .replace(/\-/g, '+')
+    .replace(/_/g, '/');
+
+  var rawData = window.atob(base64);
+  var outputArray = new Uint8Array(rawData.length);
+
+  for (var i = 0; i < rawData.length; ++i) {
+    outputArray[i] = rawData.charCodeAt(i);
+  }
+  return outputArray;
+}
