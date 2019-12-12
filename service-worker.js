@@ -8,7 +8,7 @@
 // Dieser Name ist ein Hilfsmittel, das beim Löschen des alten und Neuaufbau des neuen Caches hilft.
 // Wenn dieser Name geändert wird und der Service worker neu installiert wird. führt das bei activate()
 // dazu, dass der alte Cache gelöscht und bei fetch() dazu, dass alle zu cachenden Dateien neu geladen werden.
-var CACHE_NAME = 'pwa-template-1';
+var CACHE_NAME = 'pwa-template-2';
 
 // Diese Funktion wird bei der Neuinstallation des Service workers aufgerufen.
 self.addEventListener('install', function (evt) {
@@ -36,6 +36,7 @@ self.addEventListener('activate', function (evt) {
     self.clients.claim();
 });
 
+/*
 // Netzwerkabfragen abfangen und im Offline Betrieb aus Cache bereit stellen
 self.addEventListener('fetch', function (evt) {
     var cachetouse;
@@ -59,6 +60,7 @@ self.addEventListener('fetch', function (evt) {
         })
     );
 });
+*/
 
 self.addEventListener('push', function(event) {
   console.log('Received a push message', event);
