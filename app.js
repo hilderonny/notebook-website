@@ -11,7 +11,7 @@ window.addEventListener('load', function () {
     measurementId: "G-TCYF2GFX07"
   };
   firebase.initializeApp(firebaseConfig);
-  firebase.analytics();
+  //firebase.analytics();
   
   Notification.requestPermission(function(status) {
       console.log('Notification permission status:', status);
