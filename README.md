@@ -10,7 +10,7 @@ This project uses [Google Cloud Messaging](https://developers.google.com/web/ilt
 ## Updates
 
 To force the clients to update the application files to new ones from the server, update the
-```version``` properties at the top of the service-worker.js file.
+```CACHE_NAME``` properties at the top of the service-worker.js file.
 
 ## Further readings
 
