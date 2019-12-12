@@ -29,7 +29,8 @@ window.addEventListener('load', function () {
           // Update UI to ask user to register for Push
           console.log('Not subscribed to push service!');
           reg.pushManager.subscribe({
-            userVisibleOnly: true
+            userVisibleOnly: true,
+            applicationServerKey: urlBase64ToUint8Array("BGMHfmImXAVpZuZdYShHqh3e4IU_B5YyM5ZLYM4lIA9m2lCNarr7-hwSILkbJmfJbB3WB5Onk-Lizq-TD_trp_A")
           }).then(function(sub) {
             console.log('Subscription: ', sub);
           }).catch(function(e) {
@@ -41,7 +42,7 @@ window.addEventListener('load', function () {
           });
         } else {
           // We have a subscription, update the database
-          console.log('Subscription object: ', sub);
+          console.log('Subscription object: ', JSON.parse(JSON.stringify(sub)));
         }
       });
     }).catch(function(err) {
@@ -50,3 +51,21 @@ window.addEventListener('load', function () {
   }
 
 });
+
+// This function is needed because Chrome doesn't accept a base64 encoded string
+// as value for applicationServerKey in pushManager.subscribe yet
+// https://bugs.chromium.org/p/chromium/issues/detail?id=802280
+function urlBase64ToUint8Array(base64String) {
+  var padding = '='.repeat((4 - base64String.length % 4) % 4);
+  var base64 = (base64String + padding)
+    .replace(/\-/g, '+')
+    .replace(/_/g, '/');
+ 
+  var rawData = window.atob(base64);
+  var outputArray = new Uint8Array(rawData.length);
+ 
+  for (var i = 0; i < rawData.length; ++i) {
+    outputArray[i] = rawData.charCodeAt(i);
+  }
+  return outputArray;
+}
