@@ -3,6 +3,10 @@
 This is a working template for a progressive web app which can run offline and which can
 be installed on the home screen on mobile devices and as shortcut on desktops.
 
+## Notifications
+
+This project uses [Google Cloud Messaging](https://developers.google.com/web/ilt/pwa/introduction-to-push-notifications#push_api) for notification of users in the background.
+
 ## Updates
 
 To force the clients to update the application files to new ones from the server, update the
