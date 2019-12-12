@@ -13,54 +13,29 @@ window.addEventListener('load', function () {
   firebase.initializeApp(firebaseConfig);
   firebase.analytics();
   
-  subscribeToPushNotification();
-});
-
-// Service worker einbinden. Dieser muss im Stammverzeichnis der App in der Datei "serviceworker.js"
-// enthalten sein.
-if ('serviceWorker' in navigator) {
-    window.addEventListener('load', function() {
-        var serviceWorkerFile = 'service-worker.js';
-        console.log('%c🧰 load: Registriere service worker aus Datei ' + serviceWorkerFile, 'color:yellow');
-        navigator.serviceWorker.register(serviceWorkerFile);
+  Notification.requestPermission(function(status) {
+      console.log('Notification permission status:', status);
+  });
+  
+  // Service worker einbinden. Dieser muss im Stammverzeichnis der App in der Datei "serviceworker.js"
+  // enthalten sein.
+  if ('serviceWorker' in navigator) {
+    var serviceWorkerFile = 'service-worker.js';
+    console.log('%c🧰 load: Registriere service worker aus Datei ' + serviceWorkerFile, 'color:yellow');
+    navigator.serviceWorker.register(serviceWorkerFile).then(function(reg) {
+      console.log('Service Worker Registered!', reg);
+      reg.pushManager.getSubscription().then(function(sub) {
+        if (sub === null) {
+          // Update UI to ask user to register for Push
+          console.log('Not subscribed to push service!');
+        } else {
+          // We have a subscription, update the database
+          console.log('Subscription object: ', sub);
+        }
+      });
+    }).catch(function(err) {
+      console.log('Service Worker registration failed: ', err);
     });
-}
+  }
 
-navigator.serviceWorker.ready
-.then(function(registration) {
-    if (!registration.pushManager) {
-        alert(
-            'This browser does not ' +
-            'support push notification.');
-        return false;
-    }
-    //---to subscribe push notification using
-    // pushmanager---
-    registration.pushManager.subscribe(
-        //---always show notification when received---
-        { userVisibleOnly: true }
-    )
-    .then(function (subscription) {
-        console.log('Push notification subscribed.');
-        console.log(subscription);
-    })
-    .catch(function (error) {
-        console.error(
-            'Push notification subscription error: ',
-            error);
-    });
 });
-
-navigator.serviceWorker.ready
-.then(function (registration) {
-    registration.pushManager.getSubscription()
-    .then(function (subscription) {
-      console.log(subscription);
-    })
-    .catch(function (error) {
-        console.error(
-            'Error occurred enabling push ',
-            error);
-    });
-});
-
