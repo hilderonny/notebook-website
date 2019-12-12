@@ -12,6 +12,8 @@ window.addEventListener('load', function () {
   };
   firebase.initializeApp(firebaseConfig);
   firebase.analytics();
+  
+  subscribeToPushNotification();
 });
 
 // Service worker einbinden. Dieser muss im Stammverzeichnis der App in der Datei "serviceworker.js"
@@ -23,3 +25,42 @@ if ('serviceWorker' in navigator) {
         navigator.serviceWorker.register(serviceWorkerFile);
     });
 }
+
+navigator.serviceWorker.ready
+.then(function(registration) {
+    if (!registration.pushManager) {
+        alert(
+            'This browser does not ' +
+            'support push notification.');
+        return false;
+    }
+    //---to subscribe push notification using
+    // pushmanager---
+    registration.pushManager.subscribe(
+        //---always show notification when received---
+        { userVisibleOnly: true }
+    )
+    .then(function (subscription) {
+        console.log('Push notification subscribed.');
+        console.log(subscription);
+    })
+    .catch(function (error) {
+        console.error(
+            'Push notification subscription error: ',
+            error);
+    });
+});
+
+navigator.serviceWorker.ready
+.then(function (registration) {
+    registration.pushManager.getSubscription()
+    .then(function (subscription) {
+      console.log(subscription);
+    })
+    .catch(function (error) {
+        console.error(
+            'Error occurred enabling push ',
+            error);
+    });
+});
+
