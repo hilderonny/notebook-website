@@ -7,9 +7,16 @@ var port = process.env.PORT || 8080;
 var app = express();
 app.use(express.static('public'));
 
+var keymap = {};
+
 app.get('/api/getpublickey', function(request, response) {
-  var keys = generateVAPIDKeys();
-  response.send(keys.publicKey);
+  var requestedkey = request.query.key;
+  if (keymap[requestedkey]) {
+    response.send(requestedkey); // Already generated
+  } else {
+    // After server restart the generated keys are invalid so generate a new one
+    response.send(generateVAPIDKeys());
+  }
 });
 
 http.createServer(app).listen(port);
@@ -19,9 +26,6 @@ http.createServer(app).listen(port);
 
 function generateVAPIDKeys() {
   const vapidKeys = webpush.generateVAPIDKeys();
-
-  return {
-    publicKey: vapidKeys.publicKey,
-    privateKey: vapidKeys.privateKey,
-  };
+  keymap[vapidKeys.publicKey] = vapidKeys.privateKey;
+  return vapidKeys.publicKey;
 }
