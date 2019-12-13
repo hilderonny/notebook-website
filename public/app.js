@@ -4,6 +4,16 @@ function triggernotification() {
   fetch('/api/notifyall');
 }
 
+function post(url, data) {
+  return fetch(url, {
+    method: "POST",
+    cache: "no-cache",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify(data)
+  }).then(function(response) {
+    return response.json();
+  });
+}
 
 window.addEventListener('load', function () {
   // Service worker einbinden. Dieser muss im Stammverzeichnis der App in der Datei "serviceworker.js"
@@ -51,8 +61,9 @@ window.addEventListener('load', function () {
         }).then(function(subscription) {
           console.log("Subscription:", subscription);
           // Register the endpoint on the server
-          return fetch('/api/setendpoint?publickey=' + encodeURI(publickey) + "&endpoint=" + encodeURI(subscription.endpoint));
-        }).then(function() {
+          return post('/api/setendpoint', subscription);
+        }).then(function(result) {
+          console.log(result);
           // Done, from here on the notification works
           document.getElementById("triggerbutton").removeAttribute("disabled");
         });
