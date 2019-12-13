@@ -20,7 +20,7 @@ window.addEventListener('load', function () {
   // Service worker einbinden. Dieser muss im Stammverzeichnis der App in der Datei "serviceworker.js"
   // enthalten sein.
   if ('serviceWorker' in navigator) {
-    var serviceWorkerFile = 'service-worker.js';
+    var serviceWorkerFile = 'serviceworker.js';
     console.log('%c🧰 load: Registriere service worker aus Datei ' + serviceWorkerFile, 'color:yellow');
     navigator.serviceWorker.register(serviceWorkerFile).then(function(reg) {
       console.log('Service Worker Registered!', reg);

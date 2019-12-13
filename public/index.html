@@ -1,6 +1,7 @@
 <!DOCTYPE html>
 <html lang="en">
   <head>
+    <!-- PWA stuff -->
     <meta name="Description" content="Template for offline capable progressive web apps with material design">
     <meta http-equiv="cache-control" content="max-age=0" />
     <meta http-equiv="cache-control" content="no-cache" />
@@ -16,20 +17,32 @@
     <link rel="apple-touch-icon" href="https://cdn.glitch.com/cb41b966-e11c-4f74-ba16-5b0d7bd50b67%2Ficon-180.png">
     <meta name="apple-mobile-web-app-capable" content="yes">
     <link rel="apple-touch-startup-image" href="https://cdn.glitch.com/cb41b966-e11c-4f74-ba16-5b0d7bd50b67%2Ficon-180.png">
+    <link rel="shortcut icon" href="https://cdn.glitch.com/cb41b966-e11c-4f74-ba16-5b0d7bd50b67%2Ffavicon.ico?v=1576219969216">
     <title>Hello PWA</title>
-    <link rel="preload" href="material.css" as="style" onload="this.rel='stylesheet'">
-    <link rel="preload" href="style.css" as="style" onload="this.rel='stylesheet'">
-    <script src="material.js"></script>
     <script src="app.js"></script>
+    
     <!-- Firebase cloud messaging -->
     <script src="https://www.gstatic.com/firebasejs/7.5.2/firebase-app.js"></script>
     <!--<script src="https://www.gstatic.com/firebasejs/7.5.2/firebase-analytics.js"></script>-->
   </head>
   <body>
     <h1>
-      Hello PWA 45
+      Hello PWA 46
     </h1>
-    <button class="foo-button mdc-button">Button</button>
+    <p>
+      At the very beginning install the PWA on your phone by clicking on the hint which appears on the bottom in chrome on Android.
+    </p>
+    <p>
+      After that click on "Enable notifications" and confirm the uprising dialog to generally enable notifications.
+    </p>
+    <p>
+      Next click on "Trigger notification after 5 seconds" and close the application window by pressing the 
+    </p>
+    <p>
+      <button onclick="enablenotifications();">Enable notifications</button>
+      <button onclick="disablenotifications();">Disable notifications</button>
+      <button onclick="triggernotification();">Trigger notification after 5 seconds</button>
+    </p>
     <p>
       <a href="https://material.io/develop/web/docs/getting-started/">Material getting started</a>
     </p>
