@@ -1,6 +1,7 @@
 /* global firebase */
 
 function triggernotification() {
+  fetch('/api/notifyall');
 }
 
 
@@ -28,7 +29,7 @@ window.addEventListener('load', function () {
               console.log('Existing subscription:', subscription);
               return subscription.unsubscribe();
             }).then(function() {
-              console.log('Successfully unsibscribed');
+              console.log('Successfully unsubscribed');
               return Promise.resolve(publickeyfromserver);
             }).catch(function(err) {
               console.log(err);
@@ -37,7 +38,8 @@ window.addEventListener('load', function () {
             });
           }
           return Promise.resolve(publickey);
-        }).then(function(publickey) {
+        }).then(function(newpublickey) {
+          publickey = newpublickey;
           // Save the key for future use
           localStorage.setItem('notificationkey', publickey);
           return serviceworkerregistration.pushManager.subscribe(
@@ -48,7 +50,10 @@ window.addEventListener('load', function () {
           );
         }).then(function(subscription) {
           console.log("Subscription:", subscription);
+          // Register the endpoint on the server
+          return fetch('/api/setendpoint?publickey=' + encodeURI(publickey) + "&endpoint=" + encodeURI(subscription.endpoint));
           // Done, from here on the notification works
+          document.getElementById("triggerbutton").removeAttribute("disabled");
         });
       });
     }).catch(function(err) {
