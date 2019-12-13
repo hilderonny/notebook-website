@@ -7,10 +7,25 @@ function triggernotification() {
   Notification.requestPermission(function(status) {
     console.log('Notification permission status:', status);
     if (status !== 'granted') return alert("Notification permission was denied. Cannot continue until the permission is granted.");
-    fetch('/api/getpublickey').then(function(response) {
-      return response.text();
+    // First check if the key is already generated for the device
+    new Promise(function(resolve) {
+      var publickey = localStorage.getItem('notificationkey');
+      if (!publickey) return fetch('/api/getpublickey').then(function(response) {
+        return response.text();
+      });
+      resolve(publickey);
     }).then(function(publickey) {
-      console.log(publickey);
+      console.log("Public key:", publickey);
+      localStorage.setItem('notificationkey', publickey);
+      return serviceworkerregistration.pushManager.subscribe(
+        {
+          userVisibleOnly: true,
+          applicationServerKey: publickey
+        }
+      );
+    }).then(function(subscription) {
+      console.log("Subscription:", subscription);
+      
     });
   });
 }
