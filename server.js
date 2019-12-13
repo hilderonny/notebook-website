@@ -9,6 +9,7 @@ app.use(express.static('public'));
 
 var keymap = {};
 
+// Validate or create a public notification key
 app.get('/api/getpublickey', function(request, response) {
   var requestedkey = request.query.key;
   if (keymap[requestedkey]) {
@@ -19,6 +20,14 @@ app.get('/api/getpublickey', function(request, response) {
   }
 });
 
+// Notify all subscribed endpoints
+app.get('/api/notifyall', function(request, response) {
+  Object.entries(keymap).forEach(function(publickey, privatekey) {
+    console.log(publickey, privatekey);
+  });
+});
+
+
 http.createServer(app).listen(port);
 
 
@@ -27,5 +36,6 @@ http.createServer(app).listen(port);
 function generateVAPIDKeys() {
   const vapidKeys = webpush.generateVAPIDKeys();
   keymap[vapidKeys.publicKey] = vapidKeys.privateKey;
+  console.log(vapidKeys);
   return vapidKeys.publicKey;
 }
