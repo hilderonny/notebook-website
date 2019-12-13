@@ -1,13 +1,23 @@
 /* global firebase */
 
-function enablenotifications() {
+var serviceworkerregistration;
+
+function triggernotification() {
+  // Request notification permission
   Notification.requestPermission(function(status) {
-      console.log('Notification permission status:', status);
+    console.log('Notification permission status:', status);
+    if (status !== 'granted') return alert("Notification permission was denied. Cannot continue until the permission is granted.");
+    fetch('/api/getpublickey').then(function(response) {
+      return response.text();
+    }).then(function(publickey) {
+      console.log(publickey);
+    });
   });
 }
 
 
 window.addEventListener('load', function () {
+  /*
   var firebaseConfig = {
     apiKey: "AIzaSyBc4CRAMGrF_w6ZG33f5qrzChSgMOW8Oas",
     authDomain: "liaga-e0b43.firebaseapp.com",
@@ -24,6 +34,7 @@ window.addEventListener('load', function () {
   Notification.requestPermission(function(status) {
       console.log('Notification permission status:', status);
   });
+  */
   
   // Service worker einbinden. Dieser muss im Stammverzeichnis der App in der Datei "serviceworker.js"
   // enthalten sein.
@@ -32,6 +43,9 @@ window.addEventListener('load', function () {
     console.log('%c🧰 load: Registriere service worker aus Datei ' + serviceWorkerFile, 'color:yellow');
     navigator.serviceWorker.register(serviceWorkerFile).then(function(reg) {
       console.log('Service Worker Registered!', reg);
+      serviceworkerregistration = reg;
+      document.getElementById("triggerbutton").removeAttribute("disabled");
+      /*
       reg.pushManager.getSubscription().then(function(sub) {
         if (sub === null) {
           // Update UI to ask user to register for Push
@@ -53,6 +67,7 @@ window.addEventListener('load', function () {
           console.log('Subscription object: ', JSON.parse(JSON.stringify(sub)));
         }
       });
+    */
     }).catch(function(err) {
       console.log('Service Worker registration failed: ', err);
     });
@@ -60,6 +75,7 @@ window.addEventListener('load', function () {
 
 });
 
+/*
 // This function is needed because Chrome doesn't accept a base64 encoded string
 // as value for applicationServerKey in pushManager.subscribe yet
 // https://bugs.chromium.org/p/chromium/issues/detail?id=802280
@@ -77,3 +93,4 @@ function urlBase64ToUint8Array(base64String) {
   }
   return outputArray;
 }
+*/

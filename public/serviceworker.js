@@ -46,8 +46,8 @@ self.addEventListener('fetch', function (evt) {
             // zwangsweise neu geladen werden. Ist bei js-Dateien ganz hilfreich, weil der Browser diese sonst nicht neu lädt
             return fetch(evt.request, { cache: 'reload' });
         }).then(function (response) {
-            // Wenn der Zugriff auf das Netz geklappt hat, die Datei im Cache speichern
-            if (response.status === 200) {
+            // Wenn der Zugriff auf das Netz geklappt hat und es keine API Anfrage ist, die Datei im Cache speichern
+            if (evt.request.url.indexOf("/api/") < 0 && response.status === 200) {
                 console.log('%c⚙ fetch: Speichere im Cache: ' + evt.request.url, 'color:lightgrey');
                 cachetouse.put(evt.request.url, response.clone());
             }

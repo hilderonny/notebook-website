@@ -36,17 +36,13 @@
       At the very beginning install the PWA on your phone by clicking on the hint which appears on the bottom in chrome on Android.
     </p>
     <p>
-      After that click on "Enable notifications" and confirm the uprising dialog to generally enable notifications.
-    </p>
-    <p>
-      Next click on "Trigger notification after 5 seconds" and close the application window by pressing the Home button.
+      Next click on "Trigger notification after 5 seconds". This will show you a confirm dialog which resuests permissions for notifications.
+      Confirm the dialog and close the application window by pressing the Home button.
       You can optionally turn your phone into standby mode by switching the diasplay off.
       After 5 seconds a system notification will appear (I hope so).
     </p>
     <p>
-      <button onclick="enablenotifications();">Enable notifications</button>
-      <button onclick="disablenotifications();">Disable notifications</button>
-      <button onclick="triggernotification();">Trigger notification after 5 seconds</button>
+      <button id="triggerbutton" onclick="triggernotification();" disabled="disabled">Trigger notification after 5 seconds</button>
     </p>
     <p>
       <a href="https://material.io/develop/web/docs/getting-started/">Material getting started</a>
