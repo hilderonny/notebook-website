@@ -52,6 +52,7 @@ window.addEventListener('load', function () {
           console.log("Subscription:", subscription);
           // Register the endpoint on the server
           return fetch('/api/setendpoint?publickey=' + encodeURI(publickey) + "&endpoint=" + encodeURI(subscription.endpoint));
+        }).then(function() {
           // Done, from here on the notification works
           document.getElementById("triggerbutton").removeAttribute("disabled");
         });
