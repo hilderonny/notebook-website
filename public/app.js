@@ -1,4 +1,12 @@
 /* global firebase */
+
+function enablenotifications() {
+  Notification.requestPermission(function(status) {
+      console.log('Notification permission status:', status);
+  });
+}
+
+
 window.addEventListener('load', function () {
   var firebaseConfig = {
     apiKey: "AIzaSyBc4CRAMGrF_w6ZG33f5qrzChSgMOW8Oas",

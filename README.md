@@ -11,7 +11,7 @@ This project uses [Google Cloud Messaging](https://developers.google.com/web/ilt
 ## Updates
 
 To force the clients to update the application files to new ones from the server, update the
-```CACHE_NAME``` properties at the top of the service-worker.js file.
+```CACHE_NAME``` properties at the top of the serviceworker.js file.
 
 ## Further readings
 
@@ -28,3 +28,4 @@ To force the clients to update the application files to new ones from the server
 - [WebAPKs on Android](https://developers.google.com/web/fundamentals/integration/webapks)
 - [The Web App Manifest](https://developers.google.com/web/fundamentals/web-app-manifest/)
 - [Your First Progressive Web App](https://developers.google.com/web/fundamentals/codelabs/your-first-pwapp/)
+- [Push notifications with VAPID](https://developers.google.com/web/ilt/pwa/introduction-to-push-notifications#identifying_your_service_with_vapid_auth)
