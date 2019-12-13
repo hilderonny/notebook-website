@@ -10,8 +10,6 @@ function post(url, data) {
     cache: "no-cache",
     headers: { "Content-Type": "application/json" },
     body: JSON.stringify(data)
-  }).then(function(response) {
-    return response.json();
   });
 }
 
@@ -61,9 +59,8 @@ window.addEventListener('load', function () {
         }).then(function(subscription) {
           console.log("Subscription:", subscription);
           // Register the endpoint on the server
-          return post('/api/setendpoint', subscription);
+          return post('/api/setendpoint', { publickey: publickey, subscription: subscription });
         }).then(function(result) {
-          console.log(result);
           // Done, from here on the notification works
           document.getElementById("triggerbutton").removeAttribute("disabled");
         });
