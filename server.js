@@ -32,8 +32,9 @@ app.post('/api/setendpoint', function(request, response) {
 });
 
 // Notify all subscribed endpoints
-app.get('/api/notifyall', function(request, response) {
-  notifyallafter5seconds();
+app.post('/api/notifyall', function(request, response) {
+  var payload = request.body;
+  notifyallafter5seconds(payload);
   response.status(200).send();
 });
 
@@ -50,21 +51,22 @@ function generateVAPIDKeys() {
   return vapidKeys.publicKey;
 }
 
-function notifyallafter5seconds() {
+function notifyallafter5seconds(payload) {
   console.log('Waiting 5 seconds to notify all ...');
-  setTimeout(notifyall, 500);
+  setTimeout(function() {
+    notifyall(payload);
+  }, 5000);
 }
 
-function notifyall() {
+function notifyall(payload) {
   console.log('Notifying all ...');
   Object.entries(keymap).forEach(function(entry) {
-    notify(entry[0], entry[1].privatekey, entry[1].subscription);
+    notify(entry[0], entry[1].privatekey, entry[1].subscription, payload);
   });
 }
 
-function notify(publickey, privatekey, subscription) {
-  console.log(publickey, privatekey, subscription);
-  var payload = 'Here is a payload!';
+function notify(publickey, privatekey, subscription, payload) {
+  console.log(publickey, privatekey, subscription, payload);
   var options = {
     vapidDetails: {
       subject: 'mailto:example_email@example.com',
@@ -75,7 +77,7 @@ function notify(publickey, privatekey, subscription) {
   };
   webpush.sendNotification(
     subscription,
-    payload,
+    JSON.stringify(payload),
     options
   );
 }

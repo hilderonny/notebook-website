@@ -61,18 +61,13 @@ self.addEventListener('fetch', function (evt) {
 });
 
 self.addEventListener('push', function(event) {
-  console.log('Received a push message', event);
-
-  var title = 'Yay a message.';
-  var body = 'We have received a push message.';
-  var icon = 'https://cdn.glitch.com/cb41b966-e11c-4f74-ba16-5b0d7bd50b67%2Ficon-192.png';
-  var tag = 'simple-push-demo-notification-tag';
+  var data = event.data.json();
+  console.log('Received a push message', event, data);
 
   event.waitUntil(
-    self.registration.showNotification(title, {
-      body: body,
-      icon: icon,
-      tag: tag
+    self.registration.showNotification(data.title, {
+      body: data.content,
+      icon: data.icon
     })
   );
 });

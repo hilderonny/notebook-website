@@ -1,7 +1,12 @@
 /* global firebase */
 
 function triggernotification() {
-  fetch('/api/notifyall');
+  var payload = {
+    title: 'Notification title',
+    content: 'Notification content',
+    icon: 'https://cdn.glitch.com/cb41b966-e11c-4f74-ba16-5b0d7bd50b67%2Ficon-192.png'
+  };
+  post('/api/notifyall', payload);
 }
 
 function post(url, data) {
