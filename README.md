@@ -5,8 +5,7 @@ be installed on the home screen on mobile devices and as shortcut on desktops.
 
 ## Notifications
 
-This project uses [Google Cloud Messaging](https://developers.google.com/web/ilt/pwa/introduction-to-push-notifications#push_api) for notification of users in the background.
-[Here](https://www.codemag.com/Article/1901031/Implementing-Push-Notifications-in-Progressive-Web-Apps-PWAs-Using-Firebase) is a good description of it.
+This project uses [VAPID Push Messaging](https://developers.google.com/web/ilt/pwa/introduction-to-push-notifications#using_vapid) for notification of users in the background.
 
 ## Updates
 
