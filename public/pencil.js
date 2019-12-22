@@ -9,7 +9,7 @@ function initPencil(canvas, config) {
   var points = [];
   
   function isPencil(e) {
-    return e.touches && e.touches[0] && typeof e.touches[0]["force"] !== "undefined" && e.touches[0]["force"] > 0;
+    return e.touches && e.touches[0] && typeof e.touches[0]["force"] !== "undefined" && (config.usetouch || e.touches[0]["force"] > 0);
   }
   
   function handleDown(e) {
@@ -29,6 +29,7 @@ function initPencil(canvas, config) {
     points.push({
       x, y, lineWidth
     });
+    canvas.hasChanged = true;
   }
   
   function handleMove(e) {
@@ -56,6 +57,7 @@ function initPencil(canvas, config) {
       context.beginPath();
       context.moveTo(xc, yc);
     }
+    canvas.hasChanged = true;
     e.preventDefault();
   }
   
@@ -77,6 +79,7 @@ function initPencil(canvas, config) {
     }
     points = [];
     lineWidth = 0;
+    canvas.hasChanged = true;
   }
   
   canvas.addEventListener("touchstart", handleDown);

@@ -4,6 +4,7 @@
 config = {
   scale: Canvas Skalierung, ab 2 macht das die Linien feiner.
   sensibility: Stärke, wie auf Druck reagiert wird. 0.5 ist ganz gut
+  usetouch: true= Auch normale Touch-Eingaben werden behandelt
 }
 */
 
@@ -28,12 +29,23 @@ function registerServiceWorker() {
   }
 }
 
+function save(canvas) {
+  if (!canvas.hasChanged) return;
+  var dataUrl = canvas.toDataURL('image/png');
+  console.log(dataUrl);
+  canvas.hasChanged = false;
+}
+
 window.addEventListener('load', function () {
   registerServiceWorker();
   var config = {
     scale: 2,
     sensibility: .5,
+    usetouch: true,
   };
   var canvas = initCanvas(config);
   initPencil(canvas, config);
+  setInterval(function() {
+    save(canvas);
+  }, 1000);
 });
