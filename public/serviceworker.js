@@ -1,14 +1,4 @@
-// Per default steuert ein Service worker alle Anfragen, die in seinem und aller Unterverzeichnisse
-// ankommen. Daher ist es am einfachsten, den worker in das Stammverzeichnis der App zu legen, dann
-// braucht man nämlich nicht den Scope anzugeben.
-
-// Der Service Worker wird bei jedem Aufruf der Website geladen. Wenn der Browser mitkriegt, dass sich
-// diese Datei geändert hat, wird der Service Worker erneut installiert und 'activate' aufgerufen.
-
-// Dieser Name ist ein Hilfsmittel, das beim Löschen des alten und Neuaufbau des neuen Caches hilft.
-// Wenn dieser Name geändert wird und der Service worker neu installiert wird. führt das bei activate()
-// dazu, dass der alte Cache gelöscht und bei fetch() dazu, dass alle zu cachenden Dateien neu geladen werden.
-var CACHE_NAME = 'pwa-template-47';
+var CACHE_NAME = 'notebook-1';
 
 // Diese Funktion wird bei der Neuinstallation des Service workers aufgerufen.
 self.addEventListener('install', function (evt) {
