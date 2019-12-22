@@ -29,10 +29,17 @@ function registerServiceWorker() {
   }
 }
 
-function save(canvas) {
+async function save(canvas) {
   if (!canvas.hasChanged) return;
   var dataUrl = canvas.toDataURL('image/png');
   console.log(dataUrl);
+  var element = {
+    _id: 1,
+    data: dataUrl,
+    blob: Uint8Array.from(atob(dataUrl.substring(22)), c => c.charCodeAt(0)),
+  }
+  var result = await LocalDb.save('seiten', element);
+  console.log(result);
   canvas.hasChanged = false;
 }
 
@@ -46,7 +53,7 @@ window.addEventListener('load', async function () {
   var canvas = initCanvas(config);
   initPencil(canvas, config);
   
-  var pages = await LocalDb.list('pages');
+  var pages = await LocalDb.list('seiten');
   console.log(pages);
   
   setInterval(function() {
