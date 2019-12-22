@@ -1,6 +1,6 @@
 // Von https://github.com/quietshu/apple-pencil-safari-api-test/blob/gh-pages/index.html
 
-function initPencil(canvas) {
+function initPencil(canvas, config) {
 
   var context;
   var lineWidth = 0;
@@ -13,14 +13,14 @@ function initPencil(canvas) {
     var x, y;
     if (e.touches && e.touches[0] && typeof e.touches[0]["force"] !== "undefined") {
       if (e.touches[0]["force"] > 0) {
-        pressure = e.touches[0]["force"];
+        pressure = e.touches[0]["force"] * config.sensibility;
       }
-      x = e.touches[0].pageX;
-      y = e.touches[0].pageY;
+      x = e.touches[0].pageX * config.scale;
+      y = e.touches[0].pageY * config.scale;
     } else {
       pressure = 1.0;
-      x = e.pageX;
-      y = e.pageY;
+      x = e.pageX * config.scale;
+      y = e.pageY * config.scale;
     }
     isDown = true;
     // lineWidth = (pressure * 50 * 0.8 + lineWidth * 0.2);
@@ -41,14 +41,14 @@ function initPencil(canvas) {
     var x, y;
     if (e.touches && e.touches[0] && typeof e.touches[0]["force"] !== "undefined") {
       if (e.touches[0]["force"] > 0) {
-        pressure = e.touches[0]["force"];
+        pressure = e.touches[0]["force"] * config.sensibility;
       }
-      x = e.touches[0].pageX;
-      y = e.touches[0].pageY;
+      x = e.touches[0].pageX * config.scale;
+      y = e.touches[0].pageY * config.scale;
     } else {
       pressure = 1.0;
-      x = e.pageX;
-      y = e.pageY;
+      x = e.pageX * config.scale;
+      y = e.pageY * config.scale;
     }
     lineWidth = (Math.log(pressure + 1) * 40 * 0.4 + lineWidth * 0.6);
     points.push({
@@ -78,14 +78,14 @@ function initPencil(canvas) {
     var x, y;
     if (e.touches && e.touches[0] && typeof e.touches[0]["force"] !== "undefined") {
       if (e.touches[0]["force"] > 0) {
-        pressure = e.touches[0]["force"];
+        pressure = e.touches[0]["force"] * config.sensibility;
       }
-      x = e.touches[0].pageX;
-      y = e.touches[0].pageY;
+      x = e.touches[0].pageX * config.scale;
+      y = e.touches[0].pageY * config.scale;
     } else {
       pressure = 1.0
-      x = e.pageX;
-      y = e.pageY;
+      x = e.pageX * config.scale;
+      y = e.pageY * config.scale;
     }
     isDown = false;
     context.strokeStyle = 'black';
@@ -93,11 +93,11 @@ function initPencil(canvas) {
     context.lineJoin = 'round';
     if (points.length >= 3) {
       var l = points.length - 1;
-      context.quadraticCurveTo(points[l].x, points[l].y, x, y)
-      context.stroke()
+      context.quadraticCurveTo(points[l].x, points[l].y, x, y);
+      context.stroke();
     }
-    points = []
-    lineWidth = 0
+    points = [];
+    lineWidth = 0;
   }
   
   canvas.addEventListener("touchstart", handleDown);
@@ -108,35 +108,3 @@ function initPencil(canvas) {
   canvas.addEventListener("touchleave", handleUp);
   canvas.addEventListener("mouseup", handleUp);
 }
-
-
-
-
-  ;['touchend', 'touchleave', 'mouseup'].forEach(function (ev) {
-    canvas.addEventListener(ev, function (e) {
-      var pressure = 0.1
-      var x, y
-      if (e.touches && e.touches[0] && typeof e.touches[0]["force"] !== "undefined") {
-        if (e.touches[0]["force"] > 0) {
-          pressure = e.touches[0]["force"]
-        }
-        x = e.touches[0].pageX * 2
-        y = e.touches[0].pageY * 2
-      } else {
-        pressure = 1.0
-        x = e.pageX * 2
-        y = e.pageY * 2
-      }
-      isMousedown = false
-      context.strokeStyle = 'black'
-      context.lineCap = 'round'
-      context.lineJoin = 'round'
-      if (points.length >= 3) {
-        var l = points.length - 1
-        context.quadraticCurveTo(points[l].x, points[l].y, x, y)
-        context.stroke()
-      }
-      points = []
-      lineWidth = 0
-    })
-  })

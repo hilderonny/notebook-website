@@ -1,10 +1,17 @@
-var canvas;
+/* global initPencil */
 
-function initCanvas() {
-  canvas = document.querySelector("canvas");
-  canvas.width = window.innerWidth;
-  canvas.height = window.innerHeight;
-  console.log(canvas.width, canvas.height);
+/*
+config = {
+  scale: Canvas Skalierung, ab 2 macht das die Linien feiner.
+  sensibility: Stärke, wie auf Druck reagiert wird. 0.5 ist ganz gut
+}
+*/
+
+function initCanvas(config) {
+  var canvas = document.querySelector("canvas");
+  canvas.width = window.innerWidth * config.scale;
+  canvas.height = window.innerHeight * config.scale;
+  return canvas;
 }
 
 function registerServiceWorker() {
@@ -23,5 +30,10 @@ function registerServiceWorker() {
 
 window.addEventListener('load', function () {
   registerServiceWorker();
-  initCanvas();
+  var config = {
+    scale: 2,
+    sensibility: .5,
+  };
+  var canvas = initCanvas(config);
+  initPencil(canvas, config);
 });
