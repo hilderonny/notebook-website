@@ -2,8 +2,9 @@ var canvas;
 
 function initCanvas() {
   canvas = document.querySelector("canvas");
-  canvas.width = window.innerwidth;
+  canvas.width = window.innerWidth;
   canvas.height = window.innerHeight;
+  console.log(canvas.width, canvas.height);
 }
 
 function registerServiceWorker() {
@@ -22,4 +23,5 @@ function registerServiceWorker() {
 
 window.addEventListener('load', function () {
   registerServiceWorker();
+  initCanvas();
 });
