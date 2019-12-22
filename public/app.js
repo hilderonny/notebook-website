@@ -1,4 +1,4 @@
-/* global initPencil */
+/* global initPencil, LocalDb */
 
 /*
 config = {
@@ -36,7 +36,7 @@ function save(canvas) {
   canvas.hasChanged = false;
 }
 
-window.addEventListener('load', function () {
+window.addEventListener('load', async function () {
   registerServiceWorker();
   var config = {
     scale: 2,
@@ -45,6 +45,10 @@ window.addEventListener('load', function () {
   };
   var canvas = initCanvas(config);
   initPencil(canvas, config);
+  
+  var pages = await LocalDb.list('pages');
+  console.log(pages);
+  
   setInterval(function() {
     save(canvas);
   }, 1000);
