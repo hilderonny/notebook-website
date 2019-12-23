@@ -2,12 +2,13 @@ const LocalDb = (function() {
   
   var db;
   // Der Name der IndexedDB-Datenbank
-  var dbName = 'notizbuch';
+  var dbName = 'notebook';
   // Wird die Versionsnummer hochgezählt, wird automatisch upgradeDb() aufgerufen. Sinnvoll bei Schemaänderung, was aber eigentlich nicht vorkommt
   var version = 1;
   
   function upgradeDb(db) {
-    db.createObjectStore('seiten', { keyPath: '_id' }); // Require that models must have a property "_id"
+    db.createObjectStore('books', { keyPath: '_id' });
+    db.createObjectStore('pages', { keyPath: '_id' });
   }
   
   // Liefert Referenz auf die Datenbank und erstellt sie bei Bedarf
