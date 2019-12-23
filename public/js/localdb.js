@@ -43,6 +43,7 @@ const LocalDb = (function() {
      */
     init: function(config) {
       stores = config.stores;
+      version = config.version;
     },
     
     list: function(collectionName) {
