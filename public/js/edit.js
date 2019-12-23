@@ -15,19 +15,6 @@ function initCanvas(config) {
   return canvas;
 }
 
-function registerServiceWorker() {
-  // Service worker einbinden. Dieser muss im Stammverzeichnis der App in der Datei "serviceworker.js"
-  // enthalten sein.
-  if ('serviceWorker' in navigator) {
-    var serviceWorkerFile = 'serviceworker.js';
-    console.log('%c🧰 load: Registriere service worker aus Datei ' + serviceWorkerFile, 'color:yellow');
-    navigator.serviceWorker.register(serviceWorkerFile).then(function(serviceworkerregistration) {
-      console.log('Service Worker Registered!', serviceworkerregistration);
-    }).catch(function(err) {
-      console.log('Service Worker registration failed: ', err);
-    });
-  }
-}
 
 async function save(canvas) {
   if (!canvas.hasChanged) return;
@@ -44,7 +31,10 @@ async function save(canvas) {
 }
 
 window.addEventListener('load', async function () {
-  registerServiceWorker();
+  
+  var params = location.search.substring(1).split('&').map(function(p) { return p.split('='); }).reduce(function(val, cur) { val[cur[0]] = cur[1]; return val; }, {});
+  console.log(params);
+  
   var config = {
     scale: 2,
     sensibility: .5,
