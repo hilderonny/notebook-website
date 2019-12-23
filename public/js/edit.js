@@ -58,10 +58,10 @@ window.addEventListener('load', async function () {
   await Notebook.savebook(book);
   
   var config = {
-    width: 1080,
-    height: 1920,
-    sensibility: .5,
-    usetouch: true,
+    width: 2100, // A4
+    height: 2970,
+    sensibility: 1,
+    usetouch: false,
   };
   initCanvas(config);
   initPencil(canvas, config);
