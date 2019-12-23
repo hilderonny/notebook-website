@@ -2,31 +2,29 @@
 
 /*
 config = {
-  scale: Canvas Skalierung, ab 2 macht das die Linien feiner.
+  width: Breite des Bildes, normalerweise 1920
+  height: Höhe des Bildes, normalerweise 1080
   sensibility: Stärke, wie auf Druck reagiert wird. 0.5 ist ganz gut
   usetouch: true= Auch normale Touch-Eingaben werden behandelt
 }
 */
 
+var book, page, canvas;
+
 function initCanvas(config) {
-  var canvas = document.querySelector("canvas");
-  canvas.width = window.innerWidth * config.scale;
-  canvas.height = window.innerHeight * config.scale;
-  return canvas;
+  canvas = document.querySelector("canvas");
+  canvas.width = config.width;
+  canvas.height = config.height;
 }
 
 
-async function save(canvas) {
+async function save() {
   if (!canvas.hasChanged) return;
   var dataUrl = canvas.toDataURL('image/png');
   console.log(dataUrl);
-  var element = {
-    _id: 1,
-    data: dataUrl,
-    blob: Uint8Array.from(atob(dataUrl.substring(22)), c => c.charCodeAt(0)),
-  }
-//  var result = await LocalDb.save('pages', element);
-  //console.log(result);
+  page.dataUrl = dataUrl;
+  page.blob = Uint8Array.from(atob(dataUrl.substring(22)), c => c.charCodeAt(0));
+  Notebook.savepage(page);
   canvas.hasChanged = false;
 }
 
@@ -39,20 +37,20 @@ window.addEventListener('load', async function () {
     return;
   };
   
-  var book = await Notebook.loadbook(params.bookid);
-  var page = await Notebook.loadpage(params.pageid);
+  book = await Notebook.loadbook(params.bookid);
+  page = await Notebook.loadpage(params.pageid);
   console.log(book, page);
   
   var config = {
-    scale: 2,
+    width: 1920,
+    height: 1080,
     sensibility: .5,
     usetouch: true,
   };
-  var canvas = initCanvas(config);
+  initCanvas(config);
   initPencil(canvas, config);
   
-  //var pages = await LocalDb.list('pages');
-  //console.log(pages);
+  if (page.dataUrl) canvas.getContext('2d').drawImage(page.dataUrl, 0, 0);
   
   setInterval(function() {
     save(canvas);

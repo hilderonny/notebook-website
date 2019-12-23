@@ -8,6 +8,10 @@ function initPencil(canvas, config) {
   var context = canvas.getContext('2d');
   var points = [];
   
+  var scalex = canvas.clientWidth / config.width;
+  var scaley = canvas.clientHeight / config.height;
+  console.log(canvas, config, scalex, scaley);
+  
   function isPencil(e) {
     return e.touches && e.touches[0] && typeof e.touches[0]["force"] !== "undefined" && (config.usetouch || e.touches[0]["force"] > 0);
   }
