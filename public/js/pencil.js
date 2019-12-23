@@ -32,7 +32,6 @@ function initPencil(canvas, config) {
     points.push({
       x, y, lineWidth
     });
-    canvas.hasChanged = true;
   }
   
   function handleMove(e) {

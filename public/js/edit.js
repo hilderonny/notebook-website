@@ -76,4 +76,12 @@ window.addEventListener('load', async function () {
   
   document.querySelector('.pages').innerHTML = (book.pageids.indexOf(book.currentpageid) + 1) + " / " + book.pageids.length;
   
+  setInterval(function() {
+    save();
+  }, 1000);
+  
+});
+
+window.addEventListener("orientationchange", function() {
+  location.reload(); // Damit Breite und Höhe wieder synchron sind
 });
