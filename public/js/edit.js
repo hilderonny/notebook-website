@@ -1,4 +1,4 @@
-/* global initPencil, LocalDb */
+/* global initPencil, Notebook */
 
 /*
 config = {
@@ -25,8 +25,8 @@ async function save(canvas) {
     data: dataUrl,
     blob: Uint8Array.from(atob(dataUrl.substring(22)), c => c.charCodeAt(0)),
   }
-  var result = await LocalDb.save('pages', element);
-  console.log(result);
+//  var result = await LocalDb.save('pages', element);
+  //console.log(result);
   canvas.hasChanged = false;
 }
 
@@ -39,6 +39,10 @@ window.addEventListener('load', async function () {
     return;
   };
   
+  var book = await Notebook.loadbook(params.bookid);
+  var page = await Notebook.loadpage(params.pageid);
+  console.log(book, page);
+  
   var config = {
     scale: 2,
     sensibility: .5,
@@ -47,8 +51,8 @@ window.addEventListener('load', async function () {
   var canvas = initCanvas(config);
   initPencil(canvas, config);
   
-  var pages = await LocalDb.list('pages');
-  console.log(pages);
+  //var pages = await LocalDb.list('pages');
+  //console.log(pages);
   
   setInterval(function() {
     save(canvas);

@@ -21,6 +21,7 @@ const Notebook = (function() {
       return LocalDb.list('books');
     },
     loadbook: async function(bookid) {
+      return LocalDb.load('books', bookid);
     },
     savepage: async function(page) {
     },

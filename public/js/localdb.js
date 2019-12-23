@@ -63,6 +63,18 @@ const LocalDb = (function() {
       });
     },
     
+    load: function(collectionName, id) {
+      return getDb().then(function(db) {
+        return new Promise(function(resolve) {
+          var request = db.transaction([collectionName], 'readwrite').objectStore(collectionName).get(id);
+          request.onsuccess = function(event) {
+            console.log(request.result);
+            resolve(event);
+          };
+        });
+      });
+    },
+    
     save: function(collectionName, element) {
       return getDb().then(function(db) {
         return new Promise(function(resolve, reject) {
