@@ -5,10 +5,12 @@ const LocalDb = (function() {
   var dbName = 'notebook';
   // Wird die Versionsnummer hochgezählt, wird automatisch upgradeDb() aufgerufen. Sinnvoll bei Schemaänderung, was aber eigentlich nicht vorkommt
   var version = 1;
+  var stores = [];
   
   function upgradeDb(db) {
-    db.createObjectStore('books', { keyPath: '_id' });
-    db.createObjectStore('pages', { keyPath: '_id' });
+    stores.forEach(function(store) {
+      db.createObjectStore(store, { keyPath: '_id' });
+    });
   }
   
   // Liefert Referenz auf die Datenbank und erstellt sie bei Bedarf
@@ -33,6 +35,15 @@ const LocalDb = (function() {
   
   // Legt LocalDb als Singleton-Klasse im globalen Kontext an.
   return {
+    
+    /**
+     * config = {
+     *   stores: [] // Name of stores
+     * }
+     */
+    init: function(config) {
+      stores = config.stores;
+    },
     
     list: function(collectionName) {
       return getDb().then(function(db) {
@@ -69,4 +80,3 @@ const LocalDb = (function() {
   }
   
 }());
-console.log(LocalDb);
