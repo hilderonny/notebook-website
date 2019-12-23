@@ -34,6 +34,10 @@ window.addEventListener('load', async function () {
   
   var params = location.search.substring(1).split('&').map(function(p) { return p.split('='); }).reduce(function(val, cur) { val[cur[0]] = cur[1]; return val; }, {});
   console.log(params);
+  if (!params.bookid || !params.pageid) {
+    location.href = "/";
+    return;
+  };
   
   var config = {
     scale: 2,
