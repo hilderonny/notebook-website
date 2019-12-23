@@ -2,8 +2,8 @@
 
 /*
 config = {
-  width: Breite des Bildes, normalerweise 1920
-  height: Höhe des Bildes, normalerweise 1080
+  width: Breite des Bildes, normalerweise 1080  - hochkant
+  height: Höhe des Bildes, normalerweise 1920  - hochkant
   sensibility: Stärke, wie auf Druck reagiert wird. 0.5 ist ganz gut
   usetouch: true= Auch normale Touch-Eingaben werden behandelt
 }
@@ -42,15 +42,21 @@ window.addEventListener('load', async function () {
   console.log(book, page);
   
   var config = {
-    width: 1920,
-    height: 1080,
+    width: 1080,
+    height: 1920,
     sensibility: .5,
     usetouch: true,
   };
   initCanvas(config);
   initPencil(canvas, config);
   
-  if (page.dataUrl) canvas.getContext('2d').drawImage(page.dataUrl, 0, 0);
+  if (page.dataUrl) {
+    var image = new Image();
+    image.onload = function() {
+      canvas.getContext('2d').drawImage(image, 0, 0);
+    };
+    image.src = page.dataUrl;
+  }
   
   setInterval(function() {
     save(canvas);

@@ -8,9 +8,8 @@ function initPencil(canvas, config) {
   var context = canvas.getContext('2d');
   var points = [];
   
-  var scalex = canvas.clientWidth / config.width;
-  var scaley = canvas.clientHeight / config.height;
-  console.log(canvas, config, scalex, scaley);
+  var scalex = config.width / canvas.clientWidth;
+  var scaley = config.height / canvas.clientHeight;
   
   function isPencil(e) {
     return e.touches && e.touches[0] && typeof e.touches[0]["force"] !== "undefined" && (config.usetouch || e.touches[0]["force"] > 0);
@@ -21,8 +20,8 @@ function initPencil(canvas, config) {
     var x, y;
     if (!isPencil(e)) return;
     pressure = e.touches[0]["force"] * config.sensibility;
-    x = e.touches[0].pageX * config.scale;
-    y = e.touches[0].pageY * config.scale;
+    x = e.touches[0].pageX * scalex;
+    y = e.touches[0].pageY * scaley;
     isDown = true;
     context.lineWidth = lineWidth;
     context.strokeStyle = 'black';
@@ -42,8 +41,8 @@ function initPencil(canvas, config) {
     var x, y;
     if (!isPencil(e)) return;
     pressure = e.touches[0]["force"] * config.sensibility;
-    x = e.touches[0].pageX * config.scale;
-    y = e.touches[0].pageY * config.scale;
+    x = e.touches[0].pageX * scalex;
+    y = e.touches[0].pageY * scaley;
     lineWidth = (Math.log(pressure + 1) * 40 * 0.4 + lineWidth * 0.6);
     points.push({
       x, y, lineWidth
@@ -70,8 +69,8 @@ function initPencil(canvas, config) {
     var x, y;
     if (!isPencil(e)) return;
     pressure = e.touches[0]["force"] * config.sensibility;
-    x = e.touches[0].pageX * config.scale;
-    y = e.touches[0].pageY * config.scale;
+    x = e.touches[0].pageX * scalex;
+    y = e.touches[0].pageY * scaley;
     isDown = false;
     context.strokeStyle = 'black';
     context.lineCap = 'round';
