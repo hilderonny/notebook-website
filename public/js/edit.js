@@ -17,7 +17,6 @@ function initCanvas(config) {
   canvas.height = config.height;
 }
 
-
 async function save() {
   if (!canvas.hasChanged) return;
   var dataUrl = canvas.toDataURL('image/png');
@@ -26,6 +25,13 @@ async function save() {
   page.blob = Uint8Array.from(atob(dataUrl.substring(22)), c => c.charCodeAt(0));
   Notebook.savepage(page);
   canvas.hasChanged = false;
+}
+
+async function nextpage() {
+  var currentindex = book.pages.indexOf(book.currentpageid);
+  if (currentindex >= book.pages.length) {
+    
+  }
 }
 
 window.addEventListener('load', async function () {

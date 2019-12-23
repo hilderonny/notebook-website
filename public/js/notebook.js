@@ -4,7 +4,7 @@ const Notebook = (function() {
   
   return {
     init: function() {
-      LocalDb.init({ version: 2, stores: ['books', 'pages'] });
+      LocalDb.init({ stores: ['books', 'pages'] });
     },
     createbook: async function() {
       var book = { _id: Date.now(), pageids: [], };
@@ -14,6 +14,9 @@ const Notebook = (function() {
       await LocalDb.save('books', book);
       await LocalDb.save('pages', firstpage);
       return book;
+    },
+    addpage: async function(book) {
+      
     },
     savebook: async function(book) {
       return LocalDb.save('books', book);
