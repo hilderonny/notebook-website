@@ -28,10 +28,19 @@ async function save() {
 }
 
 async function nextpage() {
-  var currentindex = book.pages.indexOf(book.currentpageid);
-  if (currentindex >= book.pages.length) {
-    
+  var currentindex = book.pageids.indexOf(book.currentpageid);
+  if (currentindex >= book.pageids.length - 1) {
+    await Notebook.addpage(book);
   }
+  var nextpageid = book.pageids[currentindex + 1];
+  location.href = 'edit.html?bookid=' + book._id + '&pageid=' + nextpageid;
+}
+
+async function previouspage() {
+  var currentindex = book.pageids.indexOf(book.currentpageid);
+  if (currentindex < 1) return;
+  var previouspageid = book.pageids[currentindex - 1];
+  location.href = 'edit.html?bookid=' + book._id + '&pageid=' + previouspageid;
 }
 
 window.addEventListener('load', async function () {
@@ -45,7 +54,8 @@ window.addEventListener('load', async function () {
   
   book = await Notebook.loadbook(params.bookid);
   page = await Notebook.loadpage(params.pageid);
-  console.log(book, page);
+  book.currentpageid = page._id;
+  await Notebook.savebook(book);
   
   var config = {
     width: 1080,

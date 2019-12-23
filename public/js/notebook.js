@@ -16,7 +16,11 @@ const Notebook = (function() {
       return book;
     },
     addpage: async function(book) {
-      
+      var newpage = { _id: Date.now(), bookid: book._id, };
+      book.pageids.push(newpage._id);
+      await LocalDb.save('books', book);
+      await LocalDb.save('pages', newpage);
+      return newpage;
     },
     savebook: async function(book) {
       return LocalDb.save('books', book);
