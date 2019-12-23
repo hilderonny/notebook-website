@@ -74,7 +74,6 @@ window.addEventListener('load', async function () {
     image.src = page.dataUrl;
   }
   
-  setInterval(function() {
-    save(canvas);
-  }, 1000);
+  document.querySelector('.pages').innerHTML = (book.pageids.indexOf(book.currentpageid) + 1) + " / " + book.pageids.length;
+  
 });
