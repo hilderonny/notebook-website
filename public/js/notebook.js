@@ -21,11 +21,12 @@ const Notebook = (function() {
       return LocalDb.list('books');
     },
     loadbook: async function(bookid) {
-      return LocalDb.load('books', bookid);
+      return LocalDb.load('books', parseInt(bookid));
     },
     savepage: async function(page) {
     },
     loadpage: async function(pageid) {
+      return LocalDb.load('pages', parseInt(pageid));
     },
     createbook: async function() {
     },

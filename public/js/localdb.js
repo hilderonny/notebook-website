@@ -68,8 +68,7 @@ const LocalDb = (function() {
         return new Promise(function(resolve) {
           var request = db.transaction([collectionName], 'readwrite').objectStore(collectionName).get(id);
           request.onsuccess = function(event) {
-            console.log(request.result);
-            resolve(event);
+            resolve(event.target.result);
           };
         });
       });
