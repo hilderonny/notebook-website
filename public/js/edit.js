@@ -38,7 +38,7 @@ async function save(canvas) {
     data: dataUrl,
     blob: Uint8Array.from(atob(dataUrl.substring(22)), c => c.charCodeAt(0)),
   }
-  var result = await LocalDb.save('seiten', element);
+  var result = await LocalDb.save('pages', element);
   console.log(result);
   canvas.hasChanged = false;
 }
@@ -53,7 +53,7 @@ window.addEventListener('load', async function () {
   var canvas = initCanvas(config);
   initPencil(canvas, config);
   
-  var pages = await LocalDb.list('seiten');
+  var pages = await LocalDb.list('pages');
   console.log(pages);
   
   setInterval(function() {
