@@ -1,0 +1,49 @@
+[
+    {
+        "tablename": "user",
+        "columns": [
+            {
+                "name": "username",
+                "type": "varchar(255) not null"
+            },
+            {
+                "name": "password",
+                "type": "varchar(255) not null"
+            }
+        ]
+    },
+    {
+        "tablename": "book",
+        "columns": [
+            {
+                "name": "user",
+                "type": "varchar(255) not null"
+            },
+            {
+                "name": "title",
+                "type": "varchar(255)"
+            },
+            {
+                "name": "currentpage",
+                "type": "varchar(255)"
+            }
+        ]
+    },
+    {
+        "tablename": "page",
+        "columns": [
+            {
+                "name": "user",
+                "type": "varchar(255) not null"
+            },
+            {
+                "name": "book",
+                "type": "varchar(255) not null"
+            },
+            {
+                "name": "data",
+                "type": "mediumblob"
+            }
+        ]
+    }
+]
