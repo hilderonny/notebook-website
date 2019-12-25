@@ -1,6 +1,6 @@
 // Von https://github.com/quietshu/apple-pencil-safari-api-test/blob/gh-pages/index.html
 
-function initPencil(canvas, config) {
+function initpencil(canvas, config) {
 
   var context;
   var lineWidth = 0;

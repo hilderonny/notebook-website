@@ -42,7 +42,7 @@
             },
             {
                 "name": "data",
-                "type": "mediumblob"
+                "type": "mediumtext"
             }
         ]
     }

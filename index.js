@@ -6,7 +6,7 @@ var fs = require('fs');
 
 // Prepare the server
 var app = express();
-app.use(bodyparser.json());
+app.use(bodyparser.json({limit: '10mb', extended: true})); // Bilder senden braucht soviel
 app.use('/', express.static('./public'));
 fs.readdirSync('./api/').forEach(function(apifile) {
     var apiname = apifile.split('.')[0];

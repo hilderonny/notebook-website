@@ -1,0 +1,98 @@
+* {
+    font-family: sans-serif;
+    box-sizing: border-box;
+}
+
+html {
+    margin: 0;
+    padding: 0;
+    height: 100%;
+}
+
+body {
+    margin: 0;
+    height: 100%;
+    position: relative;
+}
+
+.buttonrow .spacer { flex: 1; }
+
+.card {
+    display: none;
+    flex: 1;
+    flex-direction: column;
+    overflow: hidden;
+    position: absolute;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    left: 0;
+}
+
+.card.visible {
+    display: flex;
+}
+
+body.loading .card {
+    display: none;
+}
+
+.button {
+    display: inline-block;
+    cursor: pointer;
+    height: 32px;
+    min-width: 32px;
+    padding: 0 9px;
+    align-self: center;
+    font-size: 12px;
+    line-height: 19px;
+}
+
+.button:focus { outline:0; }
+
+.errormessage {
+    display: none;
+    color: red;
+    text-align: center;
+}
+
+.card.details .content {
+    padding: 10px;
+    overflow: auto;
+    font-size: 16px;
+    flex: 1;
+}
+
+.card.details .content .title {
+    font-variant: small-caps;
+    font-size: 22px;
+    margin: 8px 0 16px 0;
+}
+
+.card.input .content { display: flex; flex-direction: column; }
+.card.input .content label { display: block; line-height: 30px; }
+.card.input .content > input,.card.input .content > select {
+    display: block;
+}
+.card.input .content > textarea {
+    display: block;
+}
+
+.card.login, .card.register { margin-bottom: 0; }
+.card.login .content, .card.register .content { flex: unset; }
+.card.login .buttonrow, .card.register .buttonrow { text-align: center; }
+
+.card.loggedin .buttonrow {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+}
+
+.card.page canvas {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+}
