@@ -1,4 +1,14 @@
-var CACHE_NAME = 'notebook-1';
+// Per default stsuert ein Service worker alle Anfragen, die in seinem und aller Unterverzeichnisse
+// ankommen. Daher ist es am einfachsten, den worker in das Stammverzeichnis der App zu legen, dann
+// braucht man nämlich nicht den Scope anzugeben.
+
+// Der Service Worker wird bei jedem Aufruf der Website geladen. Wenn der Browser mitkriegt, dass sich
+// diese Datei geändert hat, wird der Service Worker erneut installiert und 'activate' aufgerufen.
+
+// Dieser Name ist ein Hilfsmittel, das beim Löschen des alten und Neuaufbau des neuen Caches hilft.
+// Wenn dieser Name geändert wird und der Service worker neu installiert wird. führt das bei activate()
+// dazu, dass der alte Cache gelöscht und bei fetch() dazu, dass alle zu cachenden Dateien neu geladen werden.
+var CACHE_NAME = 'notebook-2';
 
 // Diese Funktion wird bei der Neuinstallation des Service workers aufgerufen.
 self.addEventListener('install', function (evt) {
@@ -28,36 +38,16 @@ self.addEventListener('activate', function (evt) {
 
 // Netzwerkabfragen abfangen und im Offline Betrieb aus Cache bereit stellen
 self.addEventListener('fetch', function (evt) {
-    var cachetouse;
     evt.respondWith(
         caches.open(CACHE_NAME).then(function (cache) {
-            cachetouse = cache;
-            // Versuchen, die Datei aus dem Netz zu laden. 'reload' umgeht dabei den Browser-eigenen Cache, damit die Dateien
-            // zwangsweise neu geladen werden. Ist bei js-Dateien ganz hilfreich, weil der Browser diese sonst nicht neu lädt
-            return fetch(evt.request, { cache: 'reload' });
-        }).then(function (response) {
-            // Wenn der Zugriff auf das Netz geklappt hat und es keine API Anfrage ist, die Datei im Cache speichern
-            if (evt.request.url.indexOf("/api/") < 0 && response.status === 200) {
-                console.log('%c⚙ fetch: Speichere im Cache: ' + evt.request.url, 'color:lightgrey');
-                cachetouse.put(evt.request.url, response.clone());
-            }
-            return response;
-        }, function () {
-            // Netzwerkzugriff fehlgeschlagen, also aus dem Cache holen
-            console.log('%c⚙ fetch: Liefere aus dem Cache: ' + evt.request.url, 'color:lightgrey');
-            return cachetouse.match(evt.request);
+            return cache.match(evt.request).then(function (response) {
+                return response || fetch(evt.request).then(function (response) {
+                    if (evt.request.cache === 'no-cache' || evt.request.method === 'POST') return response; // API Aufrufe
+                    console.log('%c⚙ fetch: Speichere im Cache: ' + evt.request.url, 'color:lightgrey');
+                    cache.put(evt.request, response.clone());
+                    return response;
+                });
+            });
         })
     );
-});
-
-self.addEventListener('push', function(event) {
-  var data = event.data.json();
-  console.log('Received a push message', event, data);
-
-  event.waitUntil(
-    self.registration.showNotification(data.title, {
-      body: data.content,
-      icon: data.icon
-    })
-  );
 });

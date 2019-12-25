@@ -19,12 +19,19 @@ function initCanvas(config) {
 
 async function save() {
   if (!canvas.hasChanged) return;
+  canvas.toBlob(function(blob) {
+    page.blob = blob;
+    Notebook.savepage(page);
+    canvas.hasChanged = false;
+  });
+  /*
   var dataUrl = canvas.toDataURL('image/png');
   console.log(dataUrl);
   page.dataUrl = dataUrl;
   page.blob = Uint8Array.from(atob(dataUrl.substring(22)), c => c.charCodeAt(0));
   Notebook.savepage(page);
   canvas.hasChanged = false;
+  */
 }
 
 async function nextpage() {
@@ -66,12 +73,15 @@ window.addEventListener('load', async function () {
   initCanvas(config);
   initPencil(canvas, config);
   
+  console.log(page);
+  
   if (page.dataUrl) {
     var image = new Image();
     image.onload = function() {
       canvas.getContext('2d').drawImage(image, 0, 0);
     };
-    image.src = page.dataUrl;
+    var blobUrl = URL.createObjectURL(new Blob(page.blob));
+    image.src = blobUrl;
   }
   
   document.querySelector('.pages').innerHTML = (book.pageids.indexOf(book.currentpageid) + 1) + " / " + book.pageids.length;
