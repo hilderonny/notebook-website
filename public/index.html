@@ -18,8 +18,8 @@
 
   <title>Notizbuch</title>
   <link rel="stylesheet" href="css/base.css">
-  <!--<script src="js/localdb.js"></script>
-    <script src="js/notebook.js"></script>-->
+  <script src="js/localdb.js"></script>
+  <script src="js/notebook.js"></script>
   <script src="js/pencil.js"></script>
   <script defer src="js/app.js"></script>
 </head>
@@ -36,8 +36,8 @@
       <div class="errormessage">Anmeldung fehlgeschlagen</div>
     </form>
     <div class="buttonrow">
-      <div class="button" onclick="App.login();">Anmelden</div>
-      <div class="button" onclick="App.showregistercard();">Zur Registrierung</div>
+      <button onclick="App.login();">Anmelden</button>
+      <button onclick="App.showregistercard();">Zur Registrierung</button>
     </div>
   </div>
 
@@ -53,25 +53,26 @@
       <div class="errormessage">Registrierung fehlgeschlagen</div>
     </form>
     <div class="buttonrow">
-      <div class="button" onclick="App.register();">Registrierung</div>
-      <div class="button" onclick="App.showlogincard();">Zur Anmeldung</div>
+      <button onclick="App.register();">Registrierung</button>
+      <button onclick="App.showlogincard();">Zur Anmeldung</button>
     </div>
   </div>
 
   <div class="card loggedin books">
     <div class="list"></div>
     <div class="buttonrow">
-      <div class="button" onclick="App.createbook();">Neues Notizbuch</div>
+      <button onclick="App.addbook();">Neues Notizbuch</button>
+      <button onclick="App.synchronize();">Synchronisieren</button>
     </div>
   </div>
 
   <div class="card loggedin page">
     <canvas></canvas>
     <div class="buttonrow">
-      <div class="button" onclick="App.showbooks();">Zurück</div>
-      <div class="button" onclick="App.showpreviouspage();">&lt;</div>
-      <div class="button" onclick="App.shownextpage();">&gt;</div>
-      <div class="button" onclick="App.savepage();">Speichern</div>
+      <button onclick="App.showbooks();">Zurück</button>
+      <button onclick="App.showpreviouspage();">&lt;</button>
+      <button onclick="App.shownextpage();">&gt;</button>
+      <button onclick="App.savepage();">Speichern</button>
     </div>
   </div>
 

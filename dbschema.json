@@ -26,6 +26,10 @@
             {
                 "name": "currentpage",
                 "type": "varchar(255)"
+            },
+            {
+                "name": "lastmodified",
+                "type": "bigint not null"
             }
         ]
     },
@@ -43,6 +47,10 @@
             {
                 "name": "data",
                 "type": "mediumtext"
+            },
+            {
+                "name": "lastmodified",
+                "type": "bigint not null"
             }
         ]
     }

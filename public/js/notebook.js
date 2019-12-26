@@ -1,41 +1,49 @@
 /* global LocalDb */
 
 const Notebook = (function() {
+
+  var _userid;
+
+  function _generateid() {
+    return _userid + '.' + Date.now().toString();
+  }
   
   return {
-    init: function() {
-      LocalDb.init({ stores: ['books', 'pages'] });
+    init: function(userid) {
+      _userid = userid.toString();
+      LocalDb.init({ stores: ['book', 'page'] });
     },
-    createbook: async function() {
-      var book = { _id: Date.now(), pageids: [], };
-      var firstpage = { _id: Date.now(), bookid: book._id, };
-      book.pageids.push(firstpage._id);
-      book.currentpageid = firstpage._id;
-      await LocalDb.save('books', book);
-      await LocalDb.save('pages', firstpage);
+    addbook: async function() {
+      var bookid = _generateid();
+      var pageid = _generateid();
+      var book = { id: bookid, user: _userid, title: '', currentpage: pageid, lastmodified: Date.now() };
+      var firstpage = { id: pageid, user: _userid, book: bookid, data: null, lastmodified: Date.now() };
+      await LocalDb.save('book', book);
+      await LocalDb.save('page', firstpage);
       return book;
     },
     addpage: async function(book) {
-      var newpage = { _id: Date.now(), bookid: book._id, };
-      book.pageids.push(newpage._id);
-      await LocalDb.save('books', book);
-      await LocalDb.save('pages', newpage);
+      var newpage = { id: _generateid(), user: _userid, book: book.id, data: null, lastmodified: Date.now() };
+      await LocalDb.save('page', newpage);
       return newpage;
     },
-    savebook: async function(book) {
-      return LocalDb.save('books', book);
-    },
     loadbooks: async function() {
-      return LocalDb.list('books');
+      return LocalDb.list('book');
     },
     loadbook: async function(bookid) {
-      return LocalDb.load('books', parseInt(bookid));
-    },
-    savepage: async function(page) {
-      return LocalDb.save('pages', page);
+      return LocalDb.load('book', bookid);
     },
     loadpage: async function(pageid) {
-      return LocalDb.load('pages', parseInt(pageid));
+      return LocalDb.load('page', pageid);
+    },
+    loadpages: async function() {
+      return LocalDb.list('page');
+    },
+    savebook: async function(book) {
+      return LocalDb.save('book', book);
+    },
+    savepage: async function(page) {
+      return LocalDb.save('page', page);
     },
   };
 

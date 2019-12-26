@@ -1,16 +1,15 @@
 const LocalDb = (function() {
   
-  var db;
   // Der Name der IndexedDB-Datenbank
   var dbName = 'notebook';
   // Wird die Versionsnummer hochgezählt, wird automatisch upgradeDb() aufgerufen. Sinnvoll bei Schemaänderung, was aber eigentlich nicht vorkommt
-  var version = 4;
+  var version = 7;
   var stores = [];
   
   function upgradeDb(db) {
     stores.forEach(function(store) {
       try {
-        db.createObjectStore(store, { keyPath: '_id' });
+        db.createObjectStore(store, { keyPath: 'id' });
       } catch(err) {}
     });
   }
@@ -18,19 +17,15 @@ const LocalDb = (function() {
   // Liefert Referenz auf die Datenbank und erstellt sie bei Bedarf
   function getDb() {
     return new Promise(function(resolve, reject) {
-      if (db) return resolve(db);
       const request = window.indexedDB.open(dbName, version);
       request.onerror = function() {
         console.log('ERROR', request);
-        db = null;
         reject(request);
       };
       request.onsuccess = function() {
-        db = request.result;
-        resolve(db);
+        resolve(request.result);
       };
       request.onupgradeneeded = function(event) { 
-        db = null;
         upgradeDb(event.target.result);
       };
     });

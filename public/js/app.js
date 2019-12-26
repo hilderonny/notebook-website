@@ -1,5 +1,6 @@
 var App = (function () {
 
+    var USERIDKEY = 'userid';
     var USERNAMEKEY = 'username';
     var PASSWORDKEY = 'password';
 
@@ -47,15 +48,15 @@ var App = (function () {
     }
 
     function _createbutton(text, handler) {
-        var button = document.createElement('div');
-        button.classList.add('button');
+        var button = document.createElement('button');
         button.innerHTML = text;
         button.addEventListener('click', handler);
         return button;
     }
 
     async function _fetchbooks() {
-        books = await _post('/api/book/list');
+        books = await Notebook.loadbooks();
+        //books = await _post('/api/book/list');
         books.sort(function (a, b) { return a.title.localeCompare(b.title); });
         console.log('📓 books', books);
     }
@@ -78,7 +79,8 @@ var App = (function () {
     }
 
     async function _showpage(pageid) {
-        var page = await _post('/api/page/get', { id: pageid });
+        page = await Notebook.loadpage(pageid);
+        //var page = await _post('/api/page/get', { id: pageid });
         currentpage = page;
         _showcard('page', false);
         _initcanvas();
@@ -102,7 +104,8 @@ var App = (function () {
             // Login succeeded
             userid = result.id;
             token = result.token;
-            _storeusercredentials(username, password);
+            Notebook.init(userid);
+            _storeusercredentials(userid, username, password);
             _showloggedincard();
             _showbooks();
         } else {
@@ -134,7 +137,8 @@ var App = (function () {
             // Registration and login succeeded
             userid = result.id;
             token = result.token;
-            _storeusercredentials(username, password1);
+            Notebook.init(userid);
+            _storeusercredentials(userid, username, password1);
             _showloggedincard();
             _showbooks();
         } else {
@@ -154,7 +158,9 @@ var App = (function () {
 
     // Store username and password after successful login for future auto login
     // Call without parameters to clear the storage after logout
-    function _storeusercredentials(username, password) {
+    function _storeusercredentials(userid, username, password) {
+        if (!userid) localStorage.removeItem(USERIDKEY);
+        else localStorage.setItem(USERIDKEY, userid);
         if (!username) localStorage.removeItem(USERNAMEKEY);
         else localStorage.setItem(USERNAMEKEY, username);
         if (!password) localStorage.removeItem(PASSWORDKEY);
@@ -168,6 +174,7 @@ var App = (function () {
     // Tries to login with the credentials stored in local memory.
     // Returns true on success, false otherwise.
     async function _tryautologin() {
+        var userid = localStorage.getItem(USERIDKEY);
         var username = localStorage.getItem(USERNAMEKEY);
         var password = localStorage.getItem(PASSWORDKEY);
         if (!username || !password) {
@@ -177,6 +184,12 @@ var App = (function () {
             return;
         }
         var result = await _post('/api/user/login', { username: username, password: password });
+        // TODO: Netzwerkfehler behandeln
+        /*
+        if (notconnected) {
+
+        }
+        */
         if (!result.id) {
             // Clear stored credentials on failure
             _storeusercredentials();
@@ -186,6 +199,7 @@ var App = (function () {
         }
         userid = result.id;
         token = result.token;
+        Notebook.init(userid);
         await _showloggedincard();
         await _showbooks();
         _removeloading();
@@ -223,7 +237,9 @@ var App = (function () {
     });
 
     return {
-        createbook: async function () {
+        addbook: async function () {
+            var book = await Notebook.addbook();
+            /*
             var bookaddresult = await _post('/api/book/add', {});
             if (bookaddresult.error) return;
             var bookid = bookaddresult.id;
@@ -232,14 +248,17 @@ var App = (function () {
             var pageid = pageresult.id;
             var bookupdateresult = await _post('/api/book/save', { id: bookid, currentpage: pageid });
             if (bookupdateresult.error) return;
-            _showpage(pageid);
+            */
+            _showpage(book.currentpage);
         },
         login: _login,
         logout: _logout,
         register: _register,
         savepage: function () {
-            var base64data = canvas.toDataURL();
-            _post('/api/page/save', { id: currentpage.id, data: base64data });
+            currentpage.data = canvas.toDataURL();
+            currentpage.lastmodified = Date.now();
+            //_post('/api/page/save', { id: currentpage.id, data: currentpage.data });
+            Notebook.savepage(currentpage);
         },
         showbooks: _showbooks,
         showloggedincard: _showloggedincard,
@@ -247,6 +266,48 @@ var App = (function () {
         showregistercard: function () {
             document.querySelector('.card.register .errormessage').style.display = 'none';
             _showcard('register', true);
+        },
+        synchronize: async function() {
+            var localbooks = await Notebook.loadbooks();
+            var remotebooks = await _post('/api/book/list');
+            var localpages = await Notebook.loadpages();
+            var remotepages = await _post('/api/page/list');
+            console.log(localbooks, remotebooks, localpages, remotepages);
+            // Seiten, die lokal neuer sind
+            for (var i = 0; i < localpages.length; i++) {
+                var localpage = localpages[i];
+                var remotepage = remotepages.find(function(rp) { return rp.id === localpage.id; });
+                if (!remotepage || remotepage.lastmodified < localpage.lastmodified) {
+                    await _post('/api/page/save', localpage);
+                }
+            }
+            // Seiten, die remote neuer sind
+            for (var i = 0; i < remotepages.length; i++) {
+                var remotepage = remotepages[i];
+                var localpage = localpages.find(function(lp) { return lp.id === remotepage.id; });
+                if (!localpage || localpage.lastmodified < remotepage.lastmodified) {
+                    var fullremotepage = await _post('/api/page/get', { id: remotepage.id });
+                    await Notebook.savepage(fullremotepage);
+                }
+            }
+            // Bücher, die lokal neuer sind
+            for (var i = 0; i < localbooks.length; i++) {
+                var localbook = localbooks[i];
+                var remotebook = remotebooks.find(function(rb) { return rb.id === localbook.id; });
+                if (!remotebook || remotebook.lastmodified < localbook.lastmodified) {
+                    await _post('/api/book/save', localbook);
+                }
+            }
+            // Bücher, die remote neuer sind
+            for (var i = 0; i < remotebooks.length; i++) {
+                var remotebook = remotebooks[i];
+                var localbook = localbooks.find(function(lb) { return lb.id === remotebook.id; });
+                if (!localbook || localbook.lastmodified < remotebook.lastmodified) {
+                    var fullremotebook = await _post('/api/book/get', { id: remotebook.id });
+                    await Notebook.savebook(fullremotebook);
+                }
+            }
+            await _listbooks();
         },
     };
 })();
