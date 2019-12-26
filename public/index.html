@@ -73,6 +73,19 @@
       <button onclick="App.showpreviouspage();">&lt;</button>
       <button onclick="App.shownextpage();">&gt;</button>
       <button onclick="App.savepage();">Speichern</button>
+      <button onclick="App.showbookproperties();">⚙</button>
+    </div>
+  </div>
+
+  <div class="card bookdetails input">
+    <form class="content">
+      <div class="title">Bucheigenschaften</div>
+      <label>Titel</label>
+      <input name="title" autocomplete="new-password" />
+    </form>
+    <div class="buttonrow">
+      <button onclick="App.savebookproperties();">Speichern</button>
+      <button onclick="App.hidecurrentcard();">Abbrechen</button>
     </div>
   </div>
 

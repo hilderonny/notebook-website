@@ -10,7 +10,7 @@ var App = (function () {
     var books = [], canvas;
 
     var cardstack = [];
-    var currentcard, currentpage;
+    var currentcard, currentpage, currentbook;
 
     var config = {
         width: 2100, // A4
@@ -66,7 +66,8 @@ var App = (function () {
         var listdiv = document.querySelector('.card.books .list');
         listdiv.innerHTML = "";
         books.forEach(function (book) {
-            var button = _createbutton(book.id, function () {
+            var button = _createbutton(book.title || book.id, function () {
+                currentbook = book;
                 _showpage(book.currentpage);
             });
             listdiv.appendChild(button);
@@ -241,11 +242,19 @@ var App = (function () {
     return {
         addbook: async function () {
             var book = await Notebook.addbook();
+            currentbook = book;
             _showpage(book.currentpage);
         },
+        hidecurrentcard: _hidecurrentcard,
         login: _login,
         logout: _logout,
         register: _register,
+        savebookproperties: async function() {
+            currentbook.title = document.querySelector('.card.bookdetails [name="title"]').value;
+            currentbook.lastmodified = Date.now();
+            await Notebook.savebook(currentbook);
+            _hidecurrentcard();
+        },
         savepage: function () {
             currentpage.data = canvas.toDataURL();
             currentpage.lastmodified = Date.now();
@@ -253,6 +262,10 @@ var App = (function () {
             Notebook.savepage(currentpage);
         },
         showbooks: _showbooks,
+        showbookproperties: function() {
+            document.querySelector('.card.bookdetails [name="title"]').value = currentbook.title;
+            _showcard('bookdetails');
+        },
         showloggedincard: _showloggedincard,
         showlogincard: _showlogincard,
         shownextpage: async function() {
