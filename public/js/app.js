@@ -11,6 +11,7 @@ var App = (function () {
 
     var cardstack = [];
     var currentcard, currentpage;
+    var offline = false;
 
     var config = {
         width: 2100, // A4
@@ -183,22 +184,22 @@ var App = (function () {
             _removeloading();
             return;
         }
-        var result = await _post('/api/user/login', { username: username, password: password });
-        // TODO: Netzwerkfehler behandeln
-        /*
-        if (notconnected) {
-
+        try {
+            var result = await _post('/api/user/login', { username: username, password: password });
+            if (!result.id) {
+                // Clear stored credentials on failure
+                _storeusercredentials();
+                _showlogincard();
+                _removeloading();
+                return;
+            }
+            userid = result.id;
+            token = result.token;
+        } catch (err) {
+            // Offline
+            offline = true;
+            document.querySelector('body').classList.add('offline');
         }
-        */
-        if (!result.id) {
-            // Clear stored credentials on failure
-            _storeusercredentials();
-            _showlogincard();
-            _removeloading();
-            return;
-        }
-        userid = result.id;
-        token = result.token;
         Notebook.init(userid);
         await _showloggedincard();
         await _showbooks();
@@ -239,16 +240,6 @@ var App = (function () {
     return {
         addbook: async function () {
             var book = await Notebook.addbook();
-            /*
-            var bookaddresult = await _post('/api/book/add', {});
-            if (bookaddresult.error) return;
-            var bookid = bookaddresult.id;
-            var pageresult = await _post('/api/page/add', { book: bookid });
-            if (pageresult.error) return;
-            var pageid = pageresult.id;
-            var bookupdateresult = await _post('/api/book/save', { id: bookid, currentpage: pageid });
-            if (bookupdateresult.error) return;
-            */
             _showpage(book.currentpage);
         },
         login: _login,

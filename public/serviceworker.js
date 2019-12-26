@@ -8,7 +8,7 @@
 // Dieser Name ist ein Hilfsmittel, das beim Löschen des alten und Neuaufbau des neuen Caches hilft.
 // Wenn dieser Name geändert wird und der Service worker neu installiert wird. führt das bei activate()
 // dazu, dass der alte Cache gelöscht und bei fetch() dazu, dass alle zu cachenden Dateien neu geladen werden.
-var CACHE_NAME = 'notebook-5';
+var CACHE_NAME = 'notebook-6';
 
 // Diese Funktion wird bei der Neuinstallation des Service workers aufgerufen.
 self.addEventListener('install', function (evt) {
@@ -42,10 +42,13 @@ self.addEventListener('fetch', function (evt) {
         caches.open(CACHE_NAME).then(function (cache) {
             return cache.match(evt.request).then(function (response) {
                 return response || fetch(evt.request).then(function (response) {
-                    if (evt.request.cache === 'no-cache' || evt.request.method === 'POST') return response; // API Aufrufe
+                    if (evt.request.method === 'POST') return response; // API Aufrufe
                     console.log('%c⚙ fetch: Speichere im Cache: ' + evt.request.url, 'color:lightgrey');
                     cache.put(evt.request, response.clone());
                     return response;
+                }, function(err) {
+                    console.log('%c⚙ fetch: Fehler: ' + err, 'color:lightgrey');
+                    return Response.error();
                 });
             });
         })
