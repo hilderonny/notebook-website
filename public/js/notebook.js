@@ -22,8 +22,8 @@ const Notebook = (function() {
       await LocalDb.save('page', firstpage);
       return book;
     },
-    addpage: async function(book) {
-      var newpage = { id: _generateid(), user: _userid, book: book.id, data: null, lastmodified: Date.now() };
+    addpage: async function(bookid) {
+      var newpage = { id: _generateid(), user: _userid, book: bookid, data: null, lastmodified: Date.now() };
       await LocalDb.save('page', newpage);
       return newpage;
     },

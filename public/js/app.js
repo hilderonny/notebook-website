@@ -11,7 +11,6 @@ var App = (function () {
 
     var cardstack = [];
     var currentcard, currentpage;
-    var offline = false;
 
     var config = {
         width: 2100, // A4
@@ -92,6 +91,9 @@ var App = (function () {
             };
             image.src = page.data;
         }
+        var book = (await Notebook.loadbooks()).find(function(b) { return b.id = currentpage.book; });
+        book.currentpage = currentpage.id;
+        await Notebook.savebook(book);
         console.log('📜 page:', page);
     }
 
@@ -197,7 +199,6 @@ var App = (function () {
             token = result.token;
         } catch (err) {
             // Offline
-            offline = true;
             document.querySelector('body').classList.add('offline');
         }
         Notebook.init(userid);
@@ -254,6 +255,21 @@ var App = (function () {
         showbooks: _showbooks,
         showloggedincard: _showloggedincard,
         showlogincard: _showlogincard,
+        shownextpage: async function() {
+            var pages = (await Notebook.loadpages()).filter(function(p) { return p.book === currentpage.book; });
+            var currentindex = pages.findIndex(function(p) { return p.id === currentpage.id; });
+            if (currentindex >= pages.length - 1) {
+                var newpage = await Notebook.addpage(currentpage.book);
+                pages.push(newpage);
+            }
+            _showpage(pages[currentindex + 1].id);
+        },
+        showpreviouspage: async function() {
+            var pages = (await Notebook.loadpages()).filter(function(p) { return p.book === currentpage.book; });
+            var currentindex = pages.findIndex(function(p) { return p.id === currentpage.id; });
+            if (currentindex < 1) return;
+            _showpage(pages[currentindex - 1].id);
+        },
         showregistercard: function () {
             document.querySelector('.card.register .errormessage').style.display = 'none';
             _showcard('register', true);
