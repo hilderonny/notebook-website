@@ -263,9 +263,16 @@ var App = (function () {
             var remotebooks = await _post('/api/book/list');
             var localpages = await Notebook.loadpages();
             var remotepages = await _post('/api/page/list');
-            console.log(localbooks, remotebooks, localpages, remotepages);
+            var syncbutton = document.querySelector('.card.books .synchronize');
+            var count = localbooks.length + remotebooks.length + localpages.length + remotepages.length;
+            var current = 1;
+            function countup() {
+                syncbutton.innerHTML = 'Synchronisiere ' + current + '/' + count + ' ...';
+                current++;
+            }
             // Seiten, die lokal neuer sind
             for (var i = 0; i < localpages.length; i++) {
+                countup();
                 var localpage = localpages[i];
                 var remotepage = remotepages.find(function(rp) { return rp.id === localpage.id; });
                 if (!remotepage || remotepage.lastmodified < localpage.lastmodified) {
@@ -274,6 +281,7 @@ var App = (function () {
             }
             // Seiten, die remote neuer sind
             for (var i = 0; i < remotepages.length; i++) {
+                countup();
                 var remotepage = remotepages[i];
                 var localpage = localpages.find(function(lp) { return lp.id === remotepage.id; });
                 if (!localpage || localpage.lastmodified < remotepage.lastmodified) {
@@ -283,6 +291,7 @@ var App = (function () {
             }
             // Bücher, die lokal neuer sind
             for (var i = 0; i < localbooks.length; i++) {
+                countup();
                 var localbook = localbooks[i];
                 var remotebook = remotebooks.find(function(rb) { return rb.id === localbook.id; });
                 if (!remotebook || remotebook.lastmodified < localbook.lastmodified) {
@@ -291,6 +300,7 @@ var App = (function () {
             }
             // Bücher, die remote neuer sind
             for (var i = 0; i < remotebooks.length; i++) {
+                countup();
                 var remotebook = remotebooks[i];
                 var localbook = localbooks.find(function(lb) { return lb.id === remotebook.id; });
                 if (!localbook || localbook.lastmodified < remotebook.lastmodified) {
@@ -299,6 +309,7 @@ var App = (function () {
                 }
             }
             await _listbooks();
+            syncbutton.innerHTML = 'Synchronisieren';
         },
     };
 })();
