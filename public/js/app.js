@@ -10,7 +10,7 @@ var App = (function () {
     var books = [], canvas;
 
     var cardstack = [];
-    var currentcard, currentpage, currentbook;
+    var currentcard, currentpage, currentbook, currentbookpages;
 
     var config = {
         width: 2100, // A4
@@ -66,8 +66,9 @@ var App = (function () {
         var listdiv = document.querySelector('.card.books .list');
         listdiv.innerHTML = "";
         books.forEach(function (book) {
-            var button = _createbutton(book.title || book.id, function () {
+            var button = _createbutton(book.title || book.id, async function () {
                 currentbook = book;
+                currentbookpages = (await Notebook.loadpages()).filter(function(p) { return p.book === currentbook.id; });
                 _showpage(book.currentpage);
             });
             listdiv.appendChild(button);
@@ -95,6 +96,18 @@ var App = (function () {
         var book = (await Notebook.loadbooks()).find(function(b) { return b.id = currentpage.book; });
         book.currentpage = currentpage.id;
         await Notebook.savebook(book);
+        var pageselect = document.querySelector('.card.page .pageselect');
+        pageselect.innerHTML = '';
+        for (var i = 0; i < currentbookpages.length; i++) {
+            var page = currentbookpages[i];
+            var el = document.createElement('option');
+            el.innerHTML = 'Seite ' + (i+1);
+            el.value = page.id;
+            if (page.id === book.currentpage) {
+                el.setAttribute('selected', 'selected');
+            }
+            pageselect.appendChild(el);
+        }
         console.log('📜 page:', page);
     }
 
@@ -243,6 +256,7 @@ var App = (function () {
         addbook: async function () {
             var book = await Notebook.addbook();
             currentbook = book;
+            currentbookpages = (await Notebook.loadpages()).filter(function(p) { return p.book === currentpage.book; });
             _showpage(book.currentpage);
         },
         hidecurrentcard: _hidecurrentcard,
@@ -269,19 +283,18 @@ var App = (function () {
         showloggedincard: _showloggedincard,
         showlogincard: _showlogincard,
         shownextpage: async function() {
-            var pages = (await Notebook.loadpages()).filter(function(p) { return p.book === currentpage.book; });
-            var currentindex = pages.findIndex(function(p) { return p.id === currentpage.id; });
-            if (currentindex >= pages.length - 1) {
+            var currentindex = currentbookpages.findIndex(function(p) { return p.id === currentpage.id; });
+            if (currentindex >= currentbookpages.length - 1) {
                 var newpage = await Notebook.addpage(currentpage.book);
-                pages.push(newpage);
+                currentbookpages.push(newpage);
             }
-            _showpage(pages[currentindex + 1].id);
+            _showpage(currentbookpages[currentindex + 1].id);
         },
+        showpage: _showpage,
         showpreviouspage: async function() {
-            var pages = (await Notebook.loadpages()).filter(function(p) { return p.book === currentpage.book; });
-            var currentindex = pages.findIndex(function(p) { return p.id === currentpage.id; });
+            var currentindex = currentbookpages.findIndex(function(p) { return p.id === currentpage.id; });
             if (currentindex < 1) return;
-            _showpage(pages[currentindex - 1].id);
+            _showpage(currentbookpages[currentindex - 1].id);
         },
         showregistercard: function () {
             document.querySelector('.card.register .errormessage').style.display = 'none';
