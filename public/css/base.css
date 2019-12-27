@@ -109,7 +109,7 @@ body.loading .card {
     margin: 4px;
     overflow-wrap: break-word;
     text-shadow: 1px 1px 1px white, -1px 1px 1px white, 1px -1px 1px white, -1px -1px 1px white;
-    background-image: url(https://www.levimage.com/image/Web/Product/Paper/Circa/AL8390_S12.jpg);
+    background-image: url(../images/redcover.png);
     background-size: 100% 100%;
     padding: 8px;
 }
