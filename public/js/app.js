@@ -93,20 +93,33 @@ var App = (function () {
             };
             image.src = page.data;
         }
-        var book = (await Notebook.loadbooks()).find(function(b) { return b.id = currentpage.book; });
-        book.currentpage = currentpage.id;
-        await Notebook.savebook(book);
+        currentbook.currentpage = currentpage.id;
+        await Notebook.savebook(currentbook);
         var pageselect = document.querySelector('.card.page .pageselect');
         pageselect.innerHTML = '';
+        var currentpageindex;
         for (var i = 0; i < currentbookpages.length; i++) {
             var page = currentbookpages[i];
             var el = document.createElement('option');
             el.innerHTML = 'Seite ' + (i+1);
             el.value = page.id;
-            if (page.id === book.currentpage) {
+            if (page.id === currentbook.currentpage) {
                 el.setAttribute('selected', 'selected');
+                currentpageindex = i;
             }
             pageselect.appendChild(el);
+        }
+        var previousbutton = document.querySelector('.card.page .previouspage');
+        var nextbutton = document.querySelector('.card.page .nextpage');
+        if (currentpageindex < 1) {
+            previousbutton.setAttribute('disabled', 'disabled');
+        } else {
+            previousbutton.removeAttribute('disabled');
+        }
+        if (currentpageindex >= currentbookpages.length - 1) {
+            nextbutton.innerHTML = '+';
+        } else {
+            nextbutton.innerHTML = '&gt;';
         }
         console.log('📜 page:', page);
     }

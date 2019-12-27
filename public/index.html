@@ -70,9 +70,9 @@
     <canvas></canvas>
     <div class="buttonrow">
       <button onclick="App.showbooks();">Zurück</button>
-      <button onclick="App.showpreviouspage();">&lt;</button>
+      <button class="previouspage" onclick="App.showpreviouspage();">&lt;</button>
       <select class="pageselect" onchange="App.showpage(this.value);"></select>
-      <button onclick="App.shownextpage();">&gt;</button>
+      <button class="nextpage" onclick="App.shownextpage();">&gt;</button>
       <button onclick="App.savepage();">Speichern</button>
       <button onclick="App.showbookproperties();">⚙</button>
     </div>
