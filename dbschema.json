@@ -30,6 +30,10 @@
             {
                 "name": "lastmodified",
                 "type": "bigint not null"
+            },
+            {
+                "name": "image",
+                "type": "text"
             }
         ]
     },

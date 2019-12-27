@@ -71,6 +71,7 @@ var App = (function () {
                 currentbookpages = (await Notebook.loadpages()).filter(function(p) { return p.book === currentbook.id; });
                 _showpage(book.currentpage);
             });
+            if (book.image) button.style.backgroundImage = 'url(' + book.image + ')';
             listdiv.appendChild(button);
         });
     }
@@ -82,7 +83,6 @@ var App = (function () {
 
     async function _showpage(pageid) {
         page = await Notebook.loadpage(pageid);
-        //var page = await _post('/api/page/get', { id: pageid });
         currentpage = page;
         _showcard('page', false);
         _initcanvas();
@@ -265,6 +265,7 @@ var App = (function () {
         register: _register,
         savebookproperties: async function() {
             currentbook.title = document.querySelector('.card.bookdetails [name="title"]').value;
+            currentbook.image = document.querySelector('.card.bookdetails [name="image"]').value;
             currentbook.lastmodified = Date.now();
             await Notebook.savebook(currentbook);
             _hidecurrentcard();
@@ -272,12 +273,12 @@ var App = (function () {
         savepage: function () {
             currentpage.data = canvas.toDataURL();
             currentpage.lastmodified = Date.now();
-            //_post('/api/page/save', { id: currentpage.id, data: currentpage.data });
             Notebook.savepage(currentpage);
         },
         showbooks: _showbooks,
         showbookproperties: function() {
             document.querySelector('.card.bookdetails [name="title"]').value = currentbook.title;
+            document.querySelector('.card.bookdetails [name="image"]').value = currentbook.image;
             _showcard('bookdetails');
         },
         showloggedincard: _showloggedincard,
