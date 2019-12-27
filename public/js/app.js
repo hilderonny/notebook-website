@@ -256,7 +256,7 @@ var App = (function () {
         addbook: async function () {
             var book = await Notebook.addbook();
             currentbook = book;
-            currentbookpages = (await Notebook.loadpages()).filter(function(p) { return p.book === currentpage.book; });
+            currentbookpages = (await Notebook.loadpages()).filter(function(p) { return p.book === currentbook.id; });
             _showpage(book.currentpage);
         },
         hidecurrentcard: _hidecurrentcard,
