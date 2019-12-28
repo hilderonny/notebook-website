@@ -35,6 +35,7 @@ function initpencil(canvas, config) {
   }
   
   function handleMove(e) {
+    e.preventDefault();
     if (!isDown) return;
     var x, y;
     if (!isPencil(e)) return;
@@ -56,7 +57,6 @@ function initpencil(canvas, config) {
       context.moveTo(xc, yc);
     }
     canvas.hasChanged = true;
-    e.preventDefault();
   }
   
   function handleUp(e) {

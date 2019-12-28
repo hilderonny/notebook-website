@@ -196,9 +196,9 @@ body.loading .card {
 }
 
 .card.page .buttonrow .radio.color.black div { background-color: #000; }
-.card.page .buttonrow .radio.color.blue div { background-color: #00f; }
-.card.page .buttonrow .radio.color.red div { background-color: #f00; }
-.card.page .buttonrow .radio.color.green div { background-color: #0f0; }
+.card.page .buttonrow .radio.color.blue div { background-color: #4169E1; }
+.card.page .buttonrow .radio.color.red div { background-color: #E72B2D; }
+.card.page .buttonrow .radio.color.green div { background-color: #1EA262; }
 .card.page .buttonrow .radio.color.grey div { background-color: #0002; }
 .card.page .buttonrow .radio.color.lightgreen div { background-color: #0f01; }
 
