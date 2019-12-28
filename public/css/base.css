@@ -1,6 +1,7 @@
 * {
     font-family: sans-serif;
     box-sizing: border-box;
+    font-size: medium;
 }
 
 html {
@@ -13,6 +14,24 @@ body {
     margin: 0;
     height: 100%;
     position: relative;
+}
+
+button {
+    height: 32px;
+    min-width: 64px;
+    border: 1px solid #000;
+    border-radius: 4px;
+}
+
+button:disabled {
+    opacity: .2;
+}
+
+select {
+    height: 32px;
+    min-width: 64px;
+    border: 1px solid #000;
+    border-radius: 4px;
 }
 
 .buttonrow .spacer { flex: 1; }

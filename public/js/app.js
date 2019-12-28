@@ -16,7 +16,7 @@ var App = (function () {
         width: 2100, // A4
         height: 2970,
         sensibility: 1,
-        usetouch: true, // Default false
+        usetouch: false, // Default false
     };
 
     function _showcard(selector, clearstack) {
@@ -101,7 +101,7 @@ var App = (function () {
         for (var i = 0; i < currentbookpages.length; i++) {
             var page = currentbookpages[i];
             var el = document.createElement('option');
-            el.innerHTML = 'Seite ' + (i+1);
+            el.innerHTML = (i+1);
             el.value = page.id;
             if (page.id === currentbook.currentpage) {
                 el.setAttribute('selected', 'selected');
@@ -119,7 +119,7 @@ var App = (function () {
         if (currentpageindex >= currentbookpages.length - 1) {
             nextbutton.innerHTML = '+';
         } else {
-            nextbutton.innerHTML = '&gt;';
+            nextbutton.innerHTML = '⏩';
         }
         console.log('📜 page:', page);
     }
