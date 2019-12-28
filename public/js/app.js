@@ -19,7 +19,7 @@ var App = (function () {
         pensize: 3,
         pencolor: '#000',
         pentype: 'pen',
-        usetouch: true, // Default false
+        usetouch: false, // Default false
     };
 
     function _showcard(selector, clearstack) {
