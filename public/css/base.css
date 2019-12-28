@@ -18,9 +18,10 @@ body {
 
 button {
     height: 32px;
-    min-width: 64px;
+    min-width: 36px;
     border: 1px solid #000;
     border-radius: 4px;
+    background-color: white;
 }
 
 button:disabled {
@@ -29,7 +30,7 @@ button:disabled {
 
 select {
     height: 32px;
-    min-width: 64px;
+    min-width: 36px;
     border: 1px solid #000;
     border-radius: 4px;
 }
@@ -65,6 +66,7 @@ body.loading .card {
     align-self: center;
     font-size: 12px;
     line-height: 19px;
+    background-color: white;
 }
 
 .button:focus { outline:0; }
@@ -106,6 +108,7 @@ body.loading .card {
     bottom: 0;
     left: 0;
     width: 100%;
+    display: flex;
 }
 
 .card.page canvas {
@@ -114,7 +117,90 @@ body.loading .card {
     left: 0;
     width: 100%;
     height: 100%;
+    background: url(../images/background.png);
 }
+
+.card.page .buttonrow .radio {
+    height: 32px;
+    width: 32px;
+    border: 1px solid #000;
+    border-radius: 4px;
+    position: relative;
+    background-color: white;
+}
+
+.card.page .buttonrow .radio input {
+    opacity: 0;
+    width: 0;
+    height: 0;
+}
+
+.card.page .buttonrow .radio div {
+    position: absolute;
+    top: 0;
+    left: 0;
+    opacity: .2;
+}
+
+.card.page .buttonrow .radio input:checked + div {
+    opacity: 1;
+}
+
+.card.page .buttonrow .radio.type div {
+    width: 100%;
+    height: 100%;
+}
+
+.card.page .buttonrow .radio.type input:checked + div {
+    border: 3px solid #0002;
+    border-radius: 3px;
+}
+
+.card.page .buttonrow .radio.type.pen div { background: url(../images/bleistift.png) no-repeat center; }
+.card.page .buttonrow .radio.type.eraser div { background: url(../images/radiergummi.png) no-repeat center; }
+
+.card.page .buttonrow .radio.size div {
+    background-color: #000;
+    border-radius: 16px;
+}
+
+.card.page .buttonrow .radio.size.small div {
+    width: 4px;
+    height: 4px;
+    top: 13px;
+    left: 13px;
+}
+
+.card.page .buttonrow .radio.size.medium div {
+    width: 12px;
+    height: 12px;
+    top: 9px;
+    left: 9px;
+}
+
+.card.page .buttonrow .radio.size.large div {
+    width: 20px;
+    height: 20px;
+    top: 5px;
+    left: 5px;
+}
+
+.card.page .buttonrow .radio.color div {
+    width: 100%;
+    height: 100%;
+}
+
+.card.page .buttonrow .radio.color input:checked + div {
+    border: 3px solid #fffd;
+    border-radius: 3px;
+}
+
+.card.page .buttonrow .radio.color.black div { background-color: #000; }
+.card.page .buttonrow .radio.color.blue div { background-color: #00f; }
+.card.page .buttonrow .radio.color.red div { background-color: #f00; }
+.card.page .buttonrow .radio.color.green div { background-color: #0f0; }
+.card.page .buttonrow .radio.color.grey div { background-color: #0002; }
+.card.page .buttonrow .radio.color.lightgreen div { background-color: #0f01; }
 
 .card.books .list {
     display: flex;

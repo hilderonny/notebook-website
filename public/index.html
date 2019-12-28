@@ -75,7 +75,20 @@
       <button class="nextpage" onclick="App.shownextpage();">⏩</button>
       <button onclick="App.savepage();">💾</button>
       <button onclick="App.showbookproperties();">⚙</button>
-    </div>
+      <span class="spacer"></span>
+      <label class="radio type pen"><input name="pentype" type="radio" value="pen" onchange="App.setpentype(this.value);"/><div></div></label>
+      <label class="radio type eraser"><input name="pentype" type="radio" value="eraser" onchange="App.setpentype(this.value);"/><div></div></label>
+      <span class="spacer"></span>
+      <label class="radio size small"><input name="pensize" type="radio" value="3" onchange="App.setpensize(this.value);"/><div></div></label>
+      <label class="radio size medium"><input name="pensize" type="radio" value="9" onchange="App.setpensize(this.value);"/><div></div></label>
+      <label class="radio size large"><input name="pensize" type="radio" value="33" onchange="App.setpensize(this.value);"/><div></div></label>
+      <span class="spacer"></span>
+      <label class="radio color black"><input name="pencolor" type="radio" value="#000" onchange="App.setpencolor(this.value);"/><div></div></label>
+      <label class="radio color blue"><input name="pencolor" type="radio" value="#00f" onchange="App.setpencolor(this.value);"/><div></div></label>
+      <label class="radio color red"><input name="pencolor" type="radio" value="#f00" onchange="App.setpencolor(this.value);"/><div></div></label>
+      <label class="radio color green"><input name="pencolor" type="radio" value="#0f0" onchange="App.setpencolor(this.value);"/><div></div></label>
+      <label class="radio color grey"><input name="pencolor" type="radio" value="#0002" onchange="App.setpencolor(this.value);"/><div></div></label>
+      <label class="radio color lightgreen"><input name="pencolor" type="radio" value="#0f01" onchange="App.setpencolor(this.value);"/><div></div></label>
   </div>
 
   <div class="card bookdetails input">

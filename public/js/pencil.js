@@ -16,15 +16,15 @@ function initpencil(canvas, config) {
   }
   
   function handleDown(e) {
-    var pressure = 0.1;
     var x, y;
     if (!isPencil(e)) return;
-    pressure = e.touches[0]["force"] * config.sensibility;
     x = e.touches[0].pageX * scalex;
     y = e.touches[0].pageY * scaley;
     isDown = true;
+    lineWidth = config.pentype === 'eraser' ? config.pensize * 3 : config.pensize;
+    context.globalCompositeOperation = config.pentype === 'eraser' ? 'destination-out' : 'source-over';
     context.lineWidth = lineWidth;
-    context.strokeStyle = 'black';
+    context.strokeStyle = config.pentype === 'eraser' ? '#0008' : config.pencolor;
     context.lineCap = 'round';
     context.lineJoin = 'round';
     context.beginPath();
@@ -36,17 +36,13 @@ function initpencil(canvas, config) {
   
   function handleMove(e) {
     if (!isDown) return;
-    var pressure = 0.1;
     var x, y;
     if (!isPencil(e)) return;
-    pressure = e.touches[0]["force"] * config.sensibility;
     x = e.touches[0].pageX * scalex;
     y = e.touches[0].pageY * scaley;
-    lineWidth = (Math.log(pressure + 1) * 40 * 0.4 + lineWidth * 0.6);
     points.push({
       x, y, lineWidth
     });
-    context.strokeStyle = 'black';
     context.lineCap = 'round';
     context.lineJoin = 'round';
     if (points.length >= 3) {
@@ -64,14 +60,11 @@ function initpencil(canvas, config) {
   }
   
   function handleUp(e) {
-    var pressure = 0.1;
     var x, y;
     if (!isPencil(e)) return;
-    pressure = e.touches[0]["force"] * config.sensibility;
     x = e.touches[0].pageX * scalex;
     y = e.touches[0].pageY * scaley;
     isDown = false;
-    context.strokeStyle = 'black';
     context.lineCap = 'round';
     context.lineJoin = 'round';
     if (points.length >= 3) {
@@ -80,7 +73,6 @@ function initpencil(canvas, config) {
       context.stroke();
     }
     points = [];
-    lineWidth = 0;
     canvas.hasChanged = true;
   }
   

@@ -16,7 +16,10 @@ var App = (function () {
         width: 2100, // A4
         height: 2970,
         sensibility: 1,
-        usetouch: false, // Default false
+        pensize: 3,
+        pencolor: '#000',
+        pentype: 'pen',
+        usetouch: true, // Default false
     };
 
     function _showcard(selector, clearstack) {
@@ -121,6 +124,9 @@ var App = (function () {
         } else {
             nextbutton.innerHTML = '⏩';
         }
+        document.querySelector('.card.page .buttonrow .radio.type [value="' + config.pentype + '"]').click();
+        document.querySelector('.card.page .buttonrow .radio.size [value="' + config.pensize + '"]').click();
+        document.querySelector('.card.page .buttonrow .radio.color [value="' + config.pencolor + '"]').click();
         console.log('📜 page:', page);
     }
 
@@ -287,6 +293,15 @@ var App = (function () {
             currentpage.data = canvas.toDataURL();
             currentpage.lastmodified = Date.now();
             Notebook.savepage(currentpage);
+        },
+        setpencolor: function(pencolor) {
+            config.pencolor = pencolor;
+        },
+        setpensize: function(pensize) {
+            config.pensize = pensize;
+        },
+        setpentype: function(pentype) {
+            config.pentype = pentype;
         },
         showbooks: _showbooks,
         showbookproperties: function() {
