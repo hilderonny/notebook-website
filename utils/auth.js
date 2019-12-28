@@ -1,5 +1,5 @@
 var jsonwebtoken = require('jsonwebtoken');
-var db = require('./db');
+var db = require('@levelupsoftware/db');
 
 var tokensecret = process.env.TOKENSECRET || 'mytokensecret';
 

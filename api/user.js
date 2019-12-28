@@ -1,4 +1,4 @@
-var db = require('../utils/db');
+var db = require('@levelupsoftware/db');
 var bcryptjs = require('bcryptjs');
 var jsonwebtoken = require('jsonwebtoken');
 

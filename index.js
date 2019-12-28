@@ -1,5 +1,5 @@
 var express = require('express');
-var db = require('./utils/db');
+var db = require('@levelupsoftware/db');
 var http = require('http');
 var bodyparser = require('body-parser');
 var fs = require('fs');
@@ -15,7 +15,7 @@ fs.readdirSync('./api/').forEach(function(apifile) {
 });
 
 // Connect to database and then start the server
-db.connect().then(async function() {
+db.connect(process.env.DBHOST, process.env.DB, process.env.DBUSER, process.env.DBPASSWORD).then(async function() {
     var schema = JSON.parse(fs.readFileSync('./dbschema.json'));
     await db.init(schema);
     http.createServer(app).listen(process.env.PORT, function() {
