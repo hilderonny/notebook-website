@@ -48,3 +48,4 @@ const Notebook = (function() {
   };
 
 })();
+window.Notebook = Notebook;
