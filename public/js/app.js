@@ -124,6 +124,7 @@ var App = (function () {
         } else {
             nextbutton.innerHTML = '⏩';
         }
+        document.querySelector('.card.page .buttonrow .savepage').setAttribute('disabled', 'disabled');
         document.querySelector('.card.page .buttonrow .radio.type [value="' + config.pentype + '"]').click();
         document.querySelector('.card.page .buttonrow .radio.size [value="' + config.pensize + '"]').click();
         document.querySelector('.card.page .buttonrow .radio.color [value="' + config.pencolor + '"]').click();
@@ -293,6 +294,7 @@ var App = (function () {
             currentpage.data = canvas.toDataURL();
             currentpage.lastmodified = Date.now();
             Notebook.savepage(currentpage);
+            document.querySelector('.card.page .buttonrow .savepage').setAttribute('disabled', 'disabled');
         },
         setpencolor: function(pencolor) {
             config.pencolor = pencolor;

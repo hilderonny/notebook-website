@@ -3,7 +3,7 @@
   "name": "Notizbuch",
   "icons": [
     {
-      "src": "https://cdn.glitch.com/cb41b966-e11c-4f74-ba16-5b0d7bd50b67%2Ficon-192.png",
+      "src": "images/icon-192x192.png",
       "type": "image/png",
       "sizes": "192x192"
     }

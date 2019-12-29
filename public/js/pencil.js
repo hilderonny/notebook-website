@@ -32,6 +32,7 @@ function initpencil(canvas, config) {
     points.push({
       x, y, lineWidth
     });
+    document.querySelector('.card.page .buttonrow .savepage').removeAttribute('disabled');
   }
   
   function handleMove(e) {
