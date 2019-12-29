@@ -21,7 +21,7 @@
   <script src="js/localdb.js"></script>
   <script src="js/notebook.js"></script>
   <script src="js/pencil.js"></script>
-  <script defer src="js/app.js"></script>
+  <script type="module" defer src="js/app.js"></script>
 </head>
 
 <body class="loading">
@@ -63,6 +63,8 @@
     <div class="buttonrow">
       <button onclick="App.addbook();">Neues Notizbuch</button>
       <button class="synchronize" onclick="App.synchronize();">Synchronisieren</button>
+      <span class="spacer"></span>
+      <button onclick="App.logout();">Abmelden</button>
     </div>
   </div>
 

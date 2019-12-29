@@ -1,5 +1,5 @@
 var db = require('@levelupsoftware/db');
-var auth = require('../utils/auth');
+var auth = require('@levelupsoftware/auth');
 
 module.exports = function(router) {
 

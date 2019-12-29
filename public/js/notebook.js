@@ -28,7 +28,7 @@ const Notebook = (function() {
       return newpage;
     },
     loadbooks: async function() {
-      return LocalDb.list('book');
+      return LocalDb.list('book', _userid);
     },
     loadbook: async function(bookid) {
       return LocalDb.load('book', bookid);
@@ -37,7 +37,7 @@ const Notebook = (function() {
       return LocalDb.load('page', pageid);
     },
     loadpages: async function() {
-      return LocalDb.list('page');
+      return LocalDb.list('page', _userid);
     },
     savebook: async function(book) {
       return LocalDb.save('book', book);

@@ -3,6 +3,7 @@ var db = require('@levelupsoftware/db');
 var http = require('http');
 var bodyparser = require('body-parser');
 var fs = require('fs');
+var auth = require('@levelupsoftware/auth');
 
 // Prepare the server
 var app = express();
@@ -18,6 +19,10 @@ fs.readdirSync('./api/').forEach(function(apifile) {
 db.connect(process.env.DBHOST, process.env.DB, process.env.DBUSER, process.env.DBPASSWORD).then(async function() {
     var schema = JSON.parse(fs.readFileSync('./dbschema.json'));
     await db.init(schema);
+
+    // Module initialisieren
+    await auth.init(app, db, process.env.TOKENSECRET || 'mytokensecret');
+
     http.createServer(app).listen(process.env.PORT, function() {
         console.log('App listening on port ' + process.env.PORT);
     });

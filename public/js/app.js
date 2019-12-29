@@ -1,16 +1,15 @@
+import * as Auth from "/static/auth/Auth.js";
+
+Auth.init('userid', 'username', 'password');
+
 var App = (function () {
 
-    var USERIDKEY = 'userid';
-    var USERNAMEKEY = 'username';
-    var PASSWORDKEY = 'password';
-
-    var token;
     var serviceworkerregistration;
 
     var books = [], canvas;
 
     var cardstack = [];
-    var currentcard, currentpage, currentbook, currentbookpages;
+    var currentcard, currentpage, currentbook, currentbookpages, camefromregistration = false;
 
     var config = {
         width: 2100, // A4
@@ -37,19 +36,6 @@ var App = (function () {
         if (currentcard) currentcard.classList.add('visible');
     }
 
-    async function _post(url, data) {
-        var response = await fetch(url, {
-            method: "POST",
-            cache: "no-cache",
-            headers: {
-                "Content-Type": "application/json",
-                "x-access-token": token,
-            },
-            body: JSON.stringify(data)
-        });
-        return await response.json();
-    }
-
     function _createbutton(text, handler) {
         var button = document.createElement('button');
         button.innerHTML = text;
@@ -59,7 +45,6 @@ var App = (function () {
 
     async function _fetchbooks() {
         books = await Notebook.loadbooks();
-        //books = await _post('/api/book/list');
         books.sort(function (a, b) { return a.title.localeCompare(b.title); });
         console.log('📓 books', books);
     }
@@ -132,34 +117,20 @@ var App = (function () {
     }
 
     async function _login() {
+        camefromregistration = false;
         var errormessagediv = document.querySelector('.card.login .errormessage');
         errormessagediv.style.display = 'none';
         var username = document.querySelector('.card.login [name="username"]').value;
         var password = document.querySelector('.card.login [name="password"]').value;
-        var result = await _post('/api/user/login', { username: username, password: password });
-        if (result.id) {
-            // Login succeeded
-            userid = result.id;
-            token = result.token;
-            Notebook.init(userid);
-            _storeusercredentials(userid, username, password);
-            _showloggedincard();
-            _showbooks();
-        } else {
-            // Login failed
-            errormessagediv.style.display = 'block';
-            // Clear stored credentials on failure
-            _storeusercredentials();
-        }
+        await Auth.login(username, password);
     }
 
     async function _logout() {
-        // Simply clear the local storage of user credentials
-        _storeusercredentials();
-        _showlogincard();
+        Auth.logout();
     }
 
     async function _register() {
+        camefromregistration = true;
         var errormessagediv = document.querySelector('.card.register .errormessage');
         errormessagediv.style.display = 'none';
         var username = document.querySelector('.card.register [name="username"]').value;
@@ -169,19 +140,7 @@ var App = (function () {
             errormessagediv.style.display = 'block';
             return;
         }
-        var result = await _post('/api/user/register', { username: username, password: password1 });
-        if (result.id) {
-            // Registration and login succeeded
-            userid = result.id;
-            token = result.token;
-            Notebook.init(userid);
-            _storeusercredentials(userid, username, password1);
-            _showloggedincard();
-            _showbooks();
-        } else {
-            // Registrierung fehlgeschlagen
-            errormessagediv.style.display = 'block';
-        }
+        await Auth.register(username, password1);
     }
 
     async function _showloggedincard() {
@@ -193,52 +152,8 @@ var App = (function () {
         _showcard('login', true);
     }
 
-    // Store username and password after successful login for future auto login
-    // Call without parameters to clear the storage after logout
-    function _storeusercredentials(userid, username, password) {
-        if (!userid) localStorage.removeItem(USERIDKEY);
-        else localStorage.setItem(USERIDKEY, userid);
-        if (!username) localStorage.removeItem(USERNAMEKEY);
-        else localStorage.setItem(USERNAMEKEY, username);
-        if (!password) localStorage.removeItem(PASSWORDKEY);
-        else localStorage.setItem(PASSWORDKEY, password);
-    }
-
     function _removeloading() {
         document.body.classList.remove('loading');
-    }
-
-    // Tries to login with the credentials stored in local memory.
-    // Returns true on success, false otherwise.
-    async function _tryautologin() {
-        var userid = localStorage.getItem(USERIDKEY);
-        var username = localStorage.getItem(USERNAMEKEY);
-        var password = localStorage.getItem(PASSWORDKEY);
-        if (!username || !password) {
-            console.log("No username or password stored");
-            _showlogincard();
-            _removeloading();
-            return;
-        }
-        try {
-            var result = await _post('/api/user/login', { username: username, password: password });
-            if (!result.id) {
-                // Clear stored credentials on failure
-                _storeusercredentials();
-                _showlogincard();
-                _removeloading();
-                return;
-            }
-            userid = result.id;
-            token = result.token;
-        } catch (err) {
-            // Offline
-            document.querySelector('body').classList.add('offline');
-        }
-        Notebook.init(userid);
-        await _showloggedincard();
-        await _showbooks();
-        _removeloading();
     }
 
     function _initcanvas() {
@@ -265,10 +180,35 @@ var App = (function () {
                 };
             };
         }
-        _tryautologin();
+        Auth.tryautologin();
     });
 
-    window.addEventListener("orientationchange", function () {
+    window.addEventListener('login', async function(evt) {
+        if (evt.detail.success) {
+            Notebook.init(evt.detail.userid);
+            await _showloggedincard();
+            await _showbooks();
+            _removeloading();
+        } else {
+            if (camefromregistration) {
+                var errormessagediv = document.querySelector('.card.register .errormessage');
+                errormessagediv.style.display = 'block';
+            } else {
+                _showlogincard();
+            }
+            _removeloading();
+        }
+    });
+
+    window.addEventListener('logout', function() {
+        _showlogincard();
+    });
+
+    window.addEventListener('offline', function() {
+        document.querySelector('body').classList.add('offline');
+    });
+
+    window.addEventListener('orientationchange', function () {
         location.reload(); // Damit Breite und Höhe wieder synchron sind
     });
 
@@ -333,9 +273,9 @@ var App = (function () {
         },
         synchronize: async function() {
             var localbooks = await Notebook.loadbooks();
-            var remotebooks = await _post('/api/book/list');
+            var remotebooks = await Auth.post('/api/book/list');
             var localpages = await Notebook.loadpages();
-            var remotepages = await _post('/api/page/list');
+            var remotepages = await Auth.post('/api/page/list');
             var syncbutton = document.querySelector('.card.books .synchronize');
             var count = localbooks.length + remotebooks.length + localpages.length + remotepages.length;
             var current = 1;
@@ -349,7 +289,7 @@ var App = (function () {
                 var localpage = localpages[i];
                 var remotepage = remotepages.find(function(rp) { return rp.id === localpage.id; });
                 if (!remotepage || remotepage.lastmodified < localpage.lastmodified) {
-                    await _post('/api/page/save', localpage);
+                    await Auth.post('/api/page/save', localpage);
                 }
             }
             // Seiten, die remote neuer sind
@@ -358,7 +298,7 @@ var App = (function () {
                 var remotepage = remotepages[i];
                 var localpage = localpages.find(function(lp) { return lp.id === remotepage.id; });
                 if (!localpage || localpage.lastmodified < remotepage.lastmodified) {
-                    var fullremotepage = await _post('/api/page/get', { id: remotepage.id });
+                    var fullremotepage = await Auth.post('/api/page/get', { id: remotepage.id });
                     await Notebook.savepage(fullremotepage);
                 }
             }
@@ -368,7 +308,7 @@ var App = (function () {
                 var localbook = localbooks[i];
                 var remotebook = remotebooks.find(function(rb) { return rb.id === localbook.id; });
                 if (!remotebook || remotebook.lastmodified < localbook.lastmodified) {
-                    await _post('/api/book/save', localbook);
+                    await Auth.post('/api/book/save', localbook);
                 }
             }
             // Bücher, die remote neuer sind
@@ -377,7 +317,7 @@ var App = (function () {
                 var remotebook = remotebooks[i];
                 var localbook = localbooks.find(function(lb) { return lb.id === remotebook.id; });
                 if (!localbook || localbook.lastmodified < remotebook.lastmodified) {
-                    var fullremotebook = await _post('/api/book/get', { id: remotebook.id });
+                    var fullremotebook = await Auth.post('/api/book/get', { id: remotebook.id });
                     await Notebook.savebook(fullremotebook);
                 }
             }
@@ -386,3 +326,7 @@ var App = (function () {
         },
     };
 })();
+
+// Damit Auth und App aus der index.html aus aufrufbar sind.
+window.Auth = Auth;
+window.App = App;

@@ -43,7 +43,7 @@ const LocalDb = (function() {
       stores = config.stores;
     },
     
-    list: function(collectionName) {
+    list: function(collectionName, userid) {
       return getDb().then(function(db) {
         return new Promise(function(resolve) {
           var request = db.transaction([collectionName], 'readwrite').objectStore(collectionName).openCursor();
@@ -51,7 +51,9 @@ const LocalDb = (function() {
           request.onsuccess = function(event) {
             var cursor = event.target.result;
             if (cursor) {
-              elements.push(cursor.value);
+              if (cursor.value.user === userid) {
+                elements.push(cursor.value);
+              }
               cursor.continue();
             } else {
               resolve(elements);
