@@ -9,17 +9,33 @@ var App = (function () {
     var books = [], canvas;
 
     var cardstack = [];
-    var currentcard, currentpage, currentbook, currentbookpages, camefromregistration = false;
+    var currentcard, currentpage, currentbook, currentbookpages, camefromregistration = false, config;
 
-    var config = {
+    var defaultconfig = {
         width: 2100, // A4
         height: 2970,
         sensibility: 1,
         pensize: 3,
         pencolor: '#000',
         pentype: 'pen',
-        usetouch: false, // Default false
+        currentpageid: undefined,
+        currentbookid: undefined,
     };
+
+    function _loadconfig() {
+        var storedconfigstring = localStorage.getItem('config');
+        var usedconfig;
+        if (storedconfigstring) {
+            usedconfig = JSON.parse(storedconfigstring);
+        } else {
+            localStorage.setItem('config', JSON.stringify(defaultconfig));
+            usedconfig = defaultconfig;
+        }
+        usedconfig.save = function() {
+            localStorage.setItem('config', JSON.stringify(this));
+        }
+        return usedconfig;
+    }
 
     function _showcard(selector, clearstack) {
         if (clearstack) while (cardstack.length > 1) _hidecurrentcard();
@@ -49,14 +65,18 @@ var App = (function () {
         console.log('📓 books', books);
     }
 
+    async function _loadcurrentbook(bookid) {
+        currentbook = books.find(function(b) { return b.id === bookid; });
+        currentbookpages = (await Notebook.loadpages()).filter(function(p) { return p.book === currentbook.id; });
+    }
+
     async function _listbooks() {
         await _fetchbooks();
         var listdiv = document.querySelector('.card.books .list');
         listdiv.innerHTML = "";
         books.forEach(function (book) {
             var button = _createbutton(book.title || book.id, async function () {
-                currentbook = book;
-                currentbookpages = (await Notebook.loadpages()).filter(function(p) { return p.book === currentbook.id; });
+                await _loadcurrentbook(book.id);
                 _showpage(book.currentpage);
             });
             if (book.image) button.style.backgroundImage = 'url(' + book.image + ')';
@@ -72,6 +92,9 @@ var App = (function () {
     async function _showpage(pageid) {
         page = await Notebook.loadpage(pageid);
         currentpage = page;
+        config.currentpageid = pageid;
+        config.currentbookid = currentbook.id;
+        config.save();
         _showcard('page', false);
         _initcanvas();
         if (page.data) {
@@ -189,6 +212,11 @@ var App = (function () {
             await _showloggedincard();
             await _showbooks();
             _removeloading();
+            config = _loadconfig();
+            if (config.currentbookid && config.currentpageid) {
+                await _loadcurrentbook(config.currentbookid);
+                await _showpage(config.currentpageid);
+            }
         } else {
             if (camefromregistration) {
                 var errormessagediv = document.querySelector('.card.register .errormessage');
@@ -238,12 +266,15 @@ var App = (function () {
         },
         setpencolor: function(pencolor) {
             config.pencolor = pencolor;
+            config.save();
         },
         setpensize: function(pensize) {
             config.pensize = pensize;
+            config.save();
         },
         setpentype: function(pentype) {
             config.pentype = pentype;
+            config.save();
         },
         showbooks: _showbooks,
         showbookproperties: function() {

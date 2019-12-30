@@ -12,7 +12,8 @@ function initpencil(canvas, config) {
   var scaley = config.height / canvas.clientHeight;
   
   function isPencil(e) {
-    return e.touches && e.touches[0] && typeof e.touches[0]["force"] !== "undefined" && (config.usetouch || e.touches[0]["force"] > 0);
+    var usetouch = false;
+    return e.touches && e.touches[0] && typeof e.touches[0]["force"] !== "undefined" && (usetouch || e.touches[0]["force"] > 0);
   }
   
   function handleDown(e) {
@@ -21,7 +22,7 @@ function initpencil(canvas, config) {
     x = e.touches[0].pageX * scalex;
     y = e.touches[0].pageY * scaley;
     isDown = true;
-    lineWidth = config.pentype === 'eraser' ? config.pensize * 3 : config.pensize;
+    lineWidth = config.pentype === 'eraser' ? config.pensize * 5 : config.pensize;
     context.globalCompositeOperation = config.pentype === 'eraser' ? 'destination-out' : 'source-over';
     context.lineWidth = lineWidth;
     context.strokeStyle = config.pentype === 'eraser' ? '#0008' : config.pencolor;
