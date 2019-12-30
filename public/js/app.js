@@ -1,4 +1,6 @@
 import * as Auth from "/static/auth/Auth.js";
+import * as Notebook from "/static/notebook/Notebook.js";
+import * as Pencil from "/static/notebook/Pencil.js";
 
 Auth.init('userid', 'username', 'password');
 
@@ -86,6 +88,9 @@ var App = (function () {
 
     async function _showbooks() {
         await _listbooks();
+        delete config.currentbookid;
+        delete config.currentpageid;
+        config.save();
         _showcard('books', true);
     }
 
@@ -183,7 +188,7 @@ var App = (function () {
         canvas = document.querySelector(".card.page canvas");
         canvas.width = config.width;
         canvas.height = config.height;
-        initpencil(canvas, config);
+        Pencil.init(canvas, config, false); // usetouch = false by default
     }
 
     window.addEventListener('load', async function () {
@@ -208,14 +213,17 @@ var App = (function () {
 
     window.addEventListener('login', async function(evt) {
         if (evt.detail.success) {
-            Notebook.init(evt.detail.userid);
+            Notebook.init(Auth, evt.detail.userid);
             await _showloggedincard();
-            await _showbooks();
             _removeloading();
             config = _loadconfig();
             if (config.currentbookid && config.currentpageid) {
+                await _listbooks();
+                _removeloading();
                 await _loadcurrentbook(config.currentbookid);
                 await _showpage(config.currentpageid);
+            } else {
+                await _showbooks();
             }
         } else {
             if (camefromregistration) {
@@ -234,6 +242,20 @@ var App = (function () {
 
     window.addEventListener('offline', function() {
         document.querySelector('body').classList.add('offline');
+    });
+
+    window.addEventListener('notebooksync', async function(evt) {
+        var syncbutton = document.querySelector('.card.books .synchronize');
+        if (evt.detail.complete) {
+            await _listbooks();
+            syncbutton.innerHTML = 'Synchronisieren';
+        } else {
+            syncbutton.innerHTML = 'Synchronisiere ' + evt.detail.current + '/' + evt.detail.count + ' ...';
+        }
+    });
+
+    window.addEventListener('pagechanged', function() {
+        document.querySelector('.card.page .buttonrow .savepage').removeAttribute('disabled');
     });
 
     window.addEventListener('orientationchange', function () {
@@ -303,57 +325,7 @@ var App = (function () {
             _showcard('register', true);
         },
         synchronize: async function() {
-            var localbooks = await Notebook.loadbooks();
-            var remotebooks = await Auth.post('/api/book/list');
-            var localpages = await Notebook.loadpages();
-            var remotepages = await Auth.post('/api/page/list');
-            var syncbutton = document.querySelector('.card.books .synchronize');
-            var count = localbooks.length + remotebooks.length + localpages.length + remotepages.length;
-            var current = 1;
-            function countup() {
-                syncbutton.innerHTML = 'Synchronisiere ' + current + '/' + count + ' ...';
-                current++;
-            }
-            // Seiten, die lokal neuer sind
-            for (var i = 0; i < localpages.length; i++) {
-                countup();
-                var localpage = localpages[i];
-                var remotepage = remotepages.find(function(rp) { return rp.id === localpage.id; });
-                if (!remotepage || remotepage.lastmodified < localpage.lastmodified) {
-                    await Auth.post('/api/page/save', localpage);
-                }
-            }
-            // Seiten, die remote neuer sind
-            for (var i = 0; i < remotepages.length; i++) {
-                countup();
-                var remotepage = remotepages[i];
-                var localpage = localpages.find(function(lp) { return lp.id === remotepage.id; });
-                if (!localpage || localpage.lastmodified < remotepage.lastmodified) {
-                    var fullremotepage = await Auth.post('/api/page/get', { id: remotepage.id });
-                    await Notebook.savepage(fullremotepage);
-                }
-            }
-            // Bücher, die lokal neuer sind
-            for (var i = 0; i < localbooks.length; i++) {
-                countup();
-                var localbook = localbooks[i];
-                var remotebook = remotebooks.find(function(rb) { return rb.id === localbook.id; });
-                if (!remotebook || remotebook.lastmodified < localbook.lastmodified) {
-                    await Auth.post('/api/book/save', localbook);
-                }
-            }
-            // Bücher, die remote neuer sind
-            for (var i = 0; i < remotebooks.length; i++) {
-                countup();
-                var remotebook = remotebooks[i];
-                var localbook = localbooks.find(function(lb) { return lb.id === remotebook.id; });
-                if (!localbook || localbook.lastmodified < remotebook.lastmodified) {
-                    var fullremotebook = await Auth.post('/api/book/get', { id: remotebook.id });
-                    await Notebook.savebook(fullremotebook);
-                }
-            }
-            await _listbooks();
-            syncbutton.innerHTML = 'Synchronisieren';
+            await Notebook.synchronize();
         },
     };
 })();
