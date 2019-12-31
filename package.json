@@ -4,7 +4,7 @@
     "start": "node server.js"
   },
   "dependencies": {
-    "@levelupsoftware/auth": "^1.0.3",
+    "@levelupsoftware/auth": "^1.0.4",
     "@levelupsoftware/db": "^1.0.0",
     "@levelupsoftware/notebook": "^1.0.2",
     "express": "^4.17.1"
