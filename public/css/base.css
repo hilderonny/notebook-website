@@ -111,6 +111,14 @@ body.loading .card {
     display: flex;
 }
 
+.card.loggedin .buttonrow.hidden * {
+    display: none;
+}
+
+.card.loggedin .buttonrow.hidden button.alwaysvisible {
+    display: inline-block;
+}
+
 .card.page canvas {
     position: absolute;
     top: 0;

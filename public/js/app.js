@@ -137,6 +137,7 @@ var App = (function () {
         } else {
             nextbutton.innerHTML = '⏩';
         }
+        document.querySelector('.card.page .buttonrow').classList[config.showbuttonrow ? 'remove' : 'add']('hidden');
         document.querySelector('.card.page .buttonrow .savepage').setAttribute('disabled', 'disabled');
         document.querySelector('.card.page .buttonrow .radio.type [value="' + config.pentype + '"]').click();
         document.querySelector('.card.page .buttonrow .radio.size [value="' + config.pensize + '"]').click();
@@ -327,6 +328,11 @@ var App = (function () {
         synchronize: async function() {
             await Notebook.synchronize();
         },
+        togglebuttonrow: function() {
+            config.showbuttonrow = !config.showbuttonrow;
+            document.querySelector('.card.page .buttonrow').classList[config.showbuttonrow ? 'remove' : 'add']('hidden');
+            config.save();
+        }
     };
 })();
 

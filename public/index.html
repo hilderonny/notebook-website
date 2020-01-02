@@ -68,6 +68,8 @@
   <div class="card loggedin page">
     <canvas></canvas>
     <div class="buttonrow">
+      <button onclick="App.togglebuttonrow();" class="alwaysvisible">☰</button>
+      <span class="spacer"></span>
       <button onclick="App.showbooks();">📚</button>
       <button class="previouspage" onclick="App.showpreviouspage();">⏪</button>
       <select class="pageselect" onchange="App.showpage(this.value);"></select>
